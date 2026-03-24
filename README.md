@@ -42,9 +42,7 @@ brew services start postgresql@16
 
 **Opción B — Docker**
 ```bash
-docker run --name taskflow-db \
-  -e POSTGRES_PASSWORD=postgres \
-  -p 5432:5432 -d postgres:16
+docker run --name taskflow-db -e POSTGRES_PASSWORD=postgres -p 5432:5432 -d postgres:16
 ```
 
 Si usás Docker, antes de correr `setup.sh` editá `apps/api/.env` con:
