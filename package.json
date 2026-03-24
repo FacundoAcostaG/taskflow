@@ -1,10 +1,14 @@
 {
   "name": "taskflow",
   "private": true,
-  "workspaces": ["apps/api", "apps/web"],
+  "workspaces": [
+    "apps/api",
+    "apps/web"
+  ],
   "scripts": {
     "dev": "concurrently \"npm run dev --workspace=apps/api\" \"npm run dev --workspace=apps/web\"",
     "lint": "npm run lint --workspaces --if-present",
+    "typecheck": "npm run typecheck --workspaces --if-present",
     "test:unit": "npm run test:unit --workspace=apps/api",
     "test:integration": "npm run test:integration --workspace=apps/api",
     "test:bdd": "npm run test:bdd --workspace=apps/api",
@@ -14,9 +18,13 @@
     "build:web": "npm run build --workspace=apps/web"
   },
   "devDependencies": {
-    "concurrently": "^8.2.2",
-    "@playwright/test": "^1.44.0",
     "@cucumber/cucumber": "^10.8.0",
+    "@eslint/js": "^10.0.1",
+    "@playwright/test": "^1.44.0",
+    "@typescript-eslint/eslint-plugin": "^8.57.2",
+    "@typescript-eslint/parser": "^8.57.2",
+    "concurrently": "^8.2.2",
+    "globals": "^17.4.0",
     "typescript": "^5.4.5"
   }
 }

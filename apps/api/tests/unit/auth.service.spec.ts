@@ -1,5 +1,7 @@
 // tests/unit/auth.service.spec.ts
-import { describe, it, expect, vi, beforeEach } from 'vitest'
+import { describe, it, expect, vi } from 'vitest'
+import bcrypt from 'bcryptjs'
+import jwt from 'jsonwebtoken'
 import { AuthService, ConflictError, UnauthorizedError } from '../../src/services/auth.service'
 
 // ── Mock PrismaClient ────────────────────────────────────────────
@@ -102,7 +104,7 @@ describe('AuthService.register — US-01', () => {
     it('llama a findUnique con el email correcto', async () => {
       mockDb.user.findUnique.mockResolvedValue(mockUser)
 
-      try { await authService.register(validRegisterInput) } catch {}
+      try { await authService.register(validRegisterInput) } catch { /* expected error */ }
 
       expect(mockDb.user.findUnique).toHaveBeenCalledWith({
         where: { email: 'ana@test.com' },
@@ -127,7 +129,6 @@ describe('AuthService.register — US-01', () => {
 // US-02: Login de usuario
 // ════════════════════════════════════════════════════════════════
 describe('AuthService.login — US-02', () => {
-  const bcrypt = require('bcryptjs')
 
   describe('Criterio 1: login exitoso retorna JWT', () => {
     it('retorna token para credenciales válidas', async () => {
@@ -150,7 +151,6 @@ describe('AuthService.login — US-02', () => {
 
       const result = await authService.login({ email: 'ana@test.com', password: 'Password1' })
 
-      const jwt = require('jsonwebtoken')
       const decoded = jwt.decode(result.token) as any
 
       // Este expect FALLA con el bug activo → BUG-07 encontrado
