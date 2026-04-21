@@ -1,60 +1,12 @@
-# ADR-001: Stack de Testing
+## Clase 6 módulo 2 
 
-**Estado:** Aceptado  
-**Fecha:** 2025  
-**Autores:** Equipo TaskFlow
-
----
-
-## Contexto
-
-Necesitamos definir el stack de testing para TaskFlow, una API REST en Node.js + TypeScript con frontend en React. El equipo tiene experiencia con Jest pero queremos evaluar alternativas más modernas.
-
-## Decisión
-
-Adoptamos el siguiente stack:
-
-| Capa | Herramienta elegida | Alternativa descartada |
-|------|---------------------|------------------------|
-| Unit / Integration | **Vitest** | Jest |
-| API Integration | **Supertest** | Axios + servidor real |
-| BDD | **Cucumber.js** | Jest-Cucumber |
-| E2E | **Playwright** | Cypress |
-| Contract | **Pact** | Spring Cloud Contract |
-| Performance | **k6** | JMeter |
-
-## Justificación
-
-### Vitest sobre Jest
-- Nativo con Vite (mismo toolchain que el frontend)
-- ~10x más rápido en modo watch por HMR
-- API 100% compatible con Jest → sin curva de aprendizaje
-- Soporte nativo de TypeScript sin configuración extra
-
-### Playwright sobre Cypress
-- Soporte multi-browser real (Chromium, Firefox, WebKit)
-- No limitado a un solo tab — puede testear flujos multi-ventana
-- Mejor soporte de mobile emulation
-- Trace Viewer para debugging visual de fallas en CI
-- Licencia Apache 2.0 (Cypress tiene limitaciones en versión gratuita)
-
-### k6 sobre JMeter
-- Scripts en JavaScript (mismo lenguaje del proyecto)
-- CLI-first, diseñado para CI/CD
-- Thresholds como código → SLOs versionados en el repo
-- Output nativo a Grafana/InfluxDB
-
-## Consecuencias
-
-**Positivas:**
-- Stack cohesivo (todo TypeScript/JavaScript)
-- Fácil incorporación de nuevos miembros del equipo
-- Pipeline CI/CD más rápido que con Jest
-
-**Negativas:**
-- Vitest tiene menor ecosistema de plugins que Jest (aunque crece rápido)
-- Playwright requiere instalar browsers (~300MB en CI)
-
-## Revisión
-
-Esta decisión se revisará al final del semestre en la retrospectiva del proyecto.
+|  ADR_001 |  Stack de Testing para TaskFlow |
+| ------------- |:-------------:|
+| Titulo      | Elección del stack técnologico para el testing de TaskFlow (backend y frontend) |
+| Fecha      | 21/04/2026     |
+| Estado      | Aceptado     |
+| Contexto | TaskFlow es una plataforma con un backend REST API en typescript + Express, su alcance es reducido y se requiere testear el backend de manera rápida. <br>También se tiene un frontend en React + TypeScript + Vite. |
+| Descisión | Decidimos utilizar Supertest + Vitest como framework de unit testing, porque es nativo con Vite y TypeScript. Asimismo, en el repo hay un pipeline que corre luego de cada push usando estas tecnologías.<br> Tambien, decidimos utilizar Playwright como framework de e2e testing web, porque ofrece soporte nativo para typescript, ejecucion real en multiples navegadores y locatorss mas robustos, ademas de que el equipo de trabajo tenía experiencia previa con este framework. <br>Por último, para el testing de la API, decidimos usar Postman + Newman principalmente porque lleva poco tiempo desarrollar e implementar las pruebas para el comienzo del desarrollo. Tambien el equipo tiene conocimientos previos de esta plataforma. |
+| Alternativas <br>Consideradas | Para unit testing, Jest y Mocha fueron las alternativas consideradas pero fueron descartadas por tener una peor integración con Vite y TypeScript. <br>Para testing e2e web, se considero Selenium la cual fue descartada porque es mas complejo de poner en funcionamiento y que tiene una sintaxis mas compleja. <br>Por último, para testing de API, consideramos Bruno, pero fue descartado por menos familiaridad con la plataforma en comparación a postman. |
+| Consecuencias | La mayor ventaja que tuvo tomar estas decisiones para el stack tecnológico, fue la rápida adaptación y puesta en marcha del equipo, ya que se conocían estas tecnologías. <br>También, el hecho de que sean todas compatibles de manera nativa con TypeScript, evita problemas a futuro de compatibilidad. |
+| Links y Referencias | [Postman docs](https://learning.postman.com/)<br>[Vitest docs](https://vitest.dev/guide/)<br>[Playwright docs](https://playwright.dev/docs/intro) |
