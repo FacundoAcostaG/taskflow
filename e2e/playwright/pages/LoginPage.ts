@@ -6,7 +6,7 @@ export class LoginPage {
     }
     async register(email: string, password: string, name: string) {
         await this.page.goto('/register')
-        await this.page.getByLabel('Nombre').fill(name)
+        await this.page.getByTestId('register-name').fill(name)
         await this.page.getByTestId('register-email').fill(email)
         await this.page.getByTestId('register-password').fill(password)
         await this.page.getByRole('button', { name: 'Registrarse' }).click()
