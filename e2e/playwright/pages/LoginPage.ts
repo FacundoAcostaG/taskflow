@@ -9,13 +9,13 @@ export class LoginPage {
         await this.page.getByTestId('register-name').fill(name)
         await this.page.getByTestId('register-email').fill(email)
         await this.page.getByTestId('register-password').fill(password)
-        await this.page.getByRole('button', { name: 'Registrarse' }).click()
+        await this.page.getByTestId('register-submit').click();
     }
     async login(email: string, password: string) {
         await this.goto()
         await this.page.getByTestId('login-email').fill(email)
         await this.page.getByTestId('login-password').fill(password)
-        await this.page.getByRole('button', { name: 'Entrar' }).click()
+        await this.page.getByTestId('login-submit').click();
     }
     async expectRedirectToProjects() {
         await expect(this.page).toHaveURL('/projects')

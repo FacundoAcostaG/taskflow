@@ -7,8 +7,10 @@ test.describe('US-03: Crear proyecto', () => {
         const email = `user_${Date.now()}@test.com`
         const password = 'Password123'
         await loginPage.register(email, password, 'Test User')
+        await page.waitForTimeout(5000);
         await loginPage.expectRedirectToLogin()
         await loginPage.login(email, password)
+        await page.waitForTimeout(5000);
         await loginPage.expectRedirectToProjects()
     })
     test('crear proyecto aparece en la lista', async ({ page }) => {
