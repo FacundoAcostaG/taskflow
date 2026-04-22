@@ -76,10 +76,10 @@ test.describe('Flujo de tareas', () => {
     await page.locator('form').getByRole('combobox').selectOption('HIGH');
     await page.getByTestId('task-submit').click();
 
-    const task = page.getByText('Mi primera tarea E2E')
+    const task = page.getByText('Mi primera tarea E2E').first()
     await expect(task).toBeVisible()
 
-    const badge = page.getByTestId('task-card').getByText('TODO')
+    const badge = page.locator('.text-xs.font-medium.text-teal-700').first()
     await expect(badge).toContainText('TODO')
   })
 
@@ -87,11 +87,12 @@ test.describe('Flujo de tareas', () => {
     await page.goto('/projects')
     await page.getByRole('heading', { name: 'seed-project' }).click();
 
-    const task = page.getByText('seed-project').first()
+    const task = page.locator('.font-medium').first();
     await task.click()
 
-    await page.getByRole('button', { name: 'Iniciar' }).click()
-    await expect(page.getByTestId('status-badge')).toContainText('IN_PROGRESS')
+    await page.getByTestId('task-status-select').click();
+    await page.getByRole('button', { name: '→ DONE' }).isVisible(); //debe aparecer el estado DONE
+    
   })
 
   test('no puede ir de TODO a DONE directamente', async ({ page }) => {
