@@ -15,16 +15,20 @@
     "test:e2e": "npx playwright test",
     "test:all": "npm run test:unit && npm run test:integration && npm run test:bdd && npm run test:e2e",
     "dev:web": "npm run dev --workspace=apps/web",
-    "build:web": "npm run build --workspace=apps/web"
+    "build:web": "npm run build --workspace=apps/web",
+    "test:mobile": "cd mobile && npx wdio run wdio.conf.ts"
   },
   "devDependencies": {
-    "dotenv": "^16.0.0",
     "@cucumber/cucumber": "^10.8.0",
     "@eslint/js": "^10.0.1",
     "@playwright/test": "^1.44.0",
+    "@types/node": "^25.7.0",
     "@typescript-eslint/eslint-plugin": "^8.57.2",
     "@typescript-eslint/parser": "^8.57.2",
+    "@wdio/globals": "^9.27.1",
+    "@wdio/types": "^9.27.1",
     "concurrently": "^8.2.2",
+    "dotenv": "^16.0.0",
     "globals": "^17.4.0",
     "typescript": "^5.4.5"
   }
