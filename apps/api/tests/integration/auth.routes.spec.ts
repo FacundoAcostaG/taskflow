@@ -24,13 +24,17 @@ import { AuthService, ConflictError, UnauthorizedError } from '../../src/service
 const app = createApp()
 
 function getAuthServiceMock() {
+  const authServiceMock = (AuthService as any).mock.results[0]?.value
+  if (authServiceMock) return authServiceMock
+
+  new (AuthService as any)()
   return (AuthService as any).mock.results[0].value
 }
 
 // ════════════════════════════════════════════════════════════════
-// POST /auth/register
+// POST /api/auth/register
 // ════════════════════════════════════════════════════════════════
-describe('POST /auth/register', () => {
+describe('POST /api/auth/register', () => {
 
   it('201 — registro exitoso devuelve user y token', async () => {
     getAuthServiceMock().register.mockResolvedValue({
@@ -39,7 +43,7 @@ describe('POST /auth/register', () => {
     })
 
     const res = await request(app)
-      .post('/auth/register')
+      .post('/api/auth/register')
       .send({ email: 'ana@test.com', password: 'Password1', name: 'Ana' })
 
     expect(res.status).toBe(201)
@@ -53,7 +57,7 @@ describe('POST /auth/register', () => {
     )
 
     const res = await request(app)
-      .post('/auth/register')
+      .post('/api/auth/register')
       .send({ email: 'ana@test.com', password: 'Password1' })
 
     expect(res.status).toBe(409)
@@ -66,7 +70,7 @@ describe('POST /auth/register', () => {
     )
 
     const res = await request(app)
-      .post('/auth/register')
+      .post('/api/auth/register')
       .send({ email: 'ana@test.com', password: 'weak' })
 
     expect(res.status).toBe(400)
@@ -78,7 +82,7 @@ describe('POST /auth/register', () => {
     )
 
     const res = await request(app)
-      .post('/auth/register')
+      .post('/api/auth/register')
       .send({ email: 'notanemail', password: 'Password1' })
 
     expect(res.status).toBe(400)
@@ -86,9 +90,9 @@ describe('POST /auth/register', () => {
 })
 
 // ════════════════════════════════════════════════════════════════
-// POST /auth/login
+// POST /api/auth/login
 // ════════════════════════════════════════════════════════════════
-describe('POST /auth/login', () => {
+describe('POST /api/auth/login', () => {
 
   it('200 — login exitoso devuelve token', async () => {
     getAuthServiceMock().login.mockResolvedValue({
@@ -97,7 +101,7 @@ describe('POST /auth/login', () => {
     })
 
     const res = await request(app)
-      .post('/auth/login')
+      .post('/api/auth/login')
       .send({ email: 'ana@test.com', password: 'Password1' })
 
     expect(res.status).toBe(200)
@@ -110,7 +114,7 @@ describe('POST /auth/login', () => {
     )
 
     const res = await request(app)
-      .post('/auth/login')
+      .post('/api/auth/login')
       .send({ email: 'ana@test.com', password: 'Wrong1234' })
 
     expect(res.status).toBe(401)
@@ -123,7 +127,7 @@ describe('POST /auth/login', () => {
     )
 
     const res = await request(app)
-      .post('/auth/login')
+      .post('/api/auth/login')
       .send({ email: 'ana@test.com', password: 'Password1' })
 
     expect(res.status).toBe(401)
@@ -131,7 +135,7 @@ describe('POST /auth/login', () => {
   })
 
   it('401 — endpoint de proyectos sin token devuelve 401', async () => {
-    const res = await request(app).get('/projects')
+    const res = await request(app).get('/api/projects')
     expect(res.status).toBe(401)
   })
 })

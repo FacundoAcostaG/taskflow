@@ -15,9 +15,9 @@ export function createApp() {
   app.get('/health', (_req, res) => res.json({ status: 'ok' }))
 
   // Routes
-  app.use('/auth', authRoutes)
-  app.use('/projects', projectRoutes)
-  app.use('/tasks', taskRoutes)
+  app.use('/api/auth', authRoutes)
+  app.use('/api/projects', projectRoutes)
+  app.use('/api/tasks', taskRoutes)
 
   // Error handler (must be last)
   app.use(errorHandler)

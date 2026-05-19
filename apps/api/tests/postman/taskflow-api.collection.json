@@ -45,11 +45,12 @@
               }
             },
             "url": {
-              "raw": "{{base_url}}/auth/register",
+              "raw": "{{base_url}}/api/auth/register",
               "host": [
                 "{{base_url}}"
               ],
               "path": [
+                "api",
                 "auth",
                 "register"
               ]
@@ -87,11 +88,12 @@
               }
             },
             "url": {
-              "raw": "{{base_url}}/auth/register",
+              "raw": "{{base_url}}/api/auth/register",
               "host": [
                 "{{base_url}}"
               ],
               "path": [
+                "api",
                 "auth",
                 "register"
               ]
@@ -129,11 +131,12 @@
               }
             },
             "url": {
-              "raw": "{{base_url}}/auth/register",
+              "raw": "{{base_url}}/api/auth/register",
               "host": [
                 "{{base_url}}"
               ],
               "path": [
+                "api",
                 "auth",
                 "register"
               ]
@@ -171,11 +174,12 @@
               }
             },
             "url": {
-              "raw": "{{base_url}}/auth/register",
+              "raw": "{{base_url}}/api/auth/register",
               "host": [
                 "{{base_url}}"
               ],
               "path": [
+                "api",
                 "auth",
                 "register"
               ]
@@ -219,11 +223,12 @@
               }
             },
             "url": {
-              "raw": "{{base_url}}/auth/login",
+              "raw": "{{base_url}}/api/auth/login",
               "host": [
                 "{{base_url}}"
               ],
               "path": [
+                "api",
                 "auth",
                 "login"
               ]
@@ -261,11 +266,12 @@
               }
             },
             "url": {
-              "raw": "{{base_url}}/auth/login",
+              "raw": "{{base_url}}/api/auth/login",
               "host": [
                 "{{base_url}}"
               ],
               "path": [
+                "api",
                 "auth",
                 "login"
               ]
@@ -303,11 +309,12 @@
               }
             },
             "url": {
-              "raw": "{{base_url}}/auth/login",
+              "raw": "{{base_url}}/api/auth/login",
               "host": [
                 "{{base_url}}"
               ],
               "path": [
+                "api",
                 "auth",
                 "login"
               ]
@@ -368,11 +375,12 @@
               }
             },
             "url": {
-              "raw": "{{base_url}}/projects",
+              "raw": "{{base_url}}/api/projects",
               "host": [
                 "{{base_url}}"
               ],
               "path": [
+                "api",
                 "projects"
               ]
             }
@@ -430,11 +438,12 @@
               }
             },
             "url": {
-              "raw": "{{base_url}}/projects/{{project_id}}/tasks",
+              "raw": "{{base_url}}/api/projects/{{project_id}}/tasks",
               "host": [
                 "{{base_url}}"
               ],
               "path": [
+                "api",
                 "projects",
                 "{{project_id}}",
                 "tasks"
@@ -485,11 +494,12 @@
               }
             },
             "url": {
-              "raw": "{{base_url}}/tasks/{{task_id}}",
+              "raw": "{{base_url}}/api/tasks/{{task_id}}",
               "host": [
                 "{{base_url}}"
               ],
               "path": [
+                "api",
                 "tasks",
                 "{{task_id}}"
               ]
@@ -539,11 +549,12 @@
               }
             },
             "url": {
-              "raw": "{{base_url}}/tasks/{{task_id}}",
+              "raw": "{{base_url}}/api/tasks/{{task_id}}",
               "host": [
                 "{{base_url}}"
               ],
               "path": [
+                "api",
                 "tasks",
                 "{{task_id}}"
               ]
@@ -593,11 +604,12 @@
               }
             },
             "url": {
-              "raw": "{{base_url}}/tasks/{{task_id}}",
+              "raw": "{{base_url}}/api/tasks/{{task_id}}",
               "host": [
                 "{{base_url}}"
               ],
               "path": [
+                "api",
                 "tasks",
                 "{{task_id}}"
               ]
@@ -647,11 +659,12 @@
               }
             },
             "url": {
-              "raw": "{{base_url}}/tasks/{{task_id}}",
+              "raw": "{{base_url}}/api/tasks/{{task_id}}",
               "host": [
                 "{{base_url}}"
               ],
               "path": [
+                "api",
                 "tasks",
                 "{{task_id}}"
               ]

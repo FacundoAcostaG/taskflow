@@ -33,7 +33,7 @@ beforeAll(() => {
 
 })
 
-describe('POST /projects/:projectId/tasks', () => {
+describe('POST /api/projects/:projectId/tasks', () => {
   it('201 — crea tarea y devuelve el objeto creado', async () => {
     taskServiceMock.createTask.mockResolvedValue({
       id: 'task-1',
@@ -48,7 +48,7 @@ describe('POST /projects/:projectId/tasks', () => {
       assignee: null,
     })
     const res = await request(app)
-      .post('/projects/proj-1/tasks')
+      .post('/api/projects/proj-1/tasks')
       .set('Authorization', VALID_TOKEN)
       .send({ title: 'Implementar Login', priority: 'HIGH' })
     expect(res.status).toBe(201)
@@ -69,7 +69,7 @@ describe('POST /projects/:projectId/tasks', () => {
     taskServiceMock.createTask.mockRejectedValue(zodLikeError)
 
     const res = await request(app)
-      .post('/projects/proj-1/tasks')
+      .post('/api/projects/proj-1/tasks')
       .set('Authorization', VALID_TOKEN)
       .send({ title: '', priority: 'HIGH' })
 
@@ -92,13 +92,13 @@ describe('POST /projects/:projectId/tasks', () => {
       assignee: null,
     })
     const res = await request(app)
-      .post('/projects/proj-1/tasks')
+      .post('/api/projects/proj-1/tasks')
       .set('Authorization', "")
       .send({ title: '', priority: 'HIGH' })
     expect(res.status).toBe(401)
   })
 
-  describe('GET /projects/:projectId/tasks', () => {
+  describe('GET /api/projects/:projectId/tasks', () => {
     it('200 — devuelve un array de tareas del proyecto', async () => {
       taskServiceMock.getTasks.mockResolvedValue([
         {
@@ -140,7 +140,7 @@ describe('POST /projects/:projectId/tasks', () => {
       ])
 
       const res = await request(app)
-        .get('/projects/proj-1/tasks')
+        .get('/api/projects/proj-1/tasks')
         .set('Authorization', VALID_TOKEN)
 
       expect(res.status).toBe(200)
@@ -182,7 +182,7 @@ describe('POST /projects/:projectId/tasks', () => {
       ])
 
       const res = await request(app)
-        .get('/projects/proj-1/tasks')
+        .get('/api/projects/proj-1/tasks')
         .set('Authorization', "")
 
       expect(res.status).toBe(401)
