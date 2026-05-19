@@ -55,13 +55,7 @@ describe('TaskService — máquina de estados (US-06)', () => {
       ).resolves.toBeDefined()
     })
 
-    it('IN_PROGRESS → TODO ✓ (reabrir tarea en progreso)', async () => {
-      mockDb.task.findUnique.mockResolvedValue(makeTask('IN_PROGRESS'))
 
-      await expect(
-        taskService.updateTask('task-1', 'user-1', { status: 'TODO' })
-      ).resolves.toBeDefined()
-    })
   })
 
   describe('Transiciones INVÁLIDAS', () => {
@@ -106,6 +100,14 @@ describe('TaskService — máquina de estados (US-06)', () => {
       await expect(
         taskService.updateTask('task-1', 'user-1', { status: 'TODO' })
       ).rejects.toThrow('none')
+    })
+
+    it('IN_PROGRESS → TODO ✓ (reabrir tarea en progreso)', async () => {
+      mockDb.task.findUnique.mockResolvedValue(makeTask('IN_PROGRESS'))
+
+      await expect(
+        taskService.updateTask('task-1', 'user-1', { status: 'TODO' })
+      ).rejects.toThrow(UnprocessableError)
     })
   })
 
