@@ -4,7 +4,7 @@ import { ProjectService } from '../services/project.service'
 import { TaskService } from '../services/task.service'
 import { CommentService } from '../services/comment.service'
 import { requireAuth, AuthRequest } from '../middleware/auth.middleware'
-import { Status, Priority } from '@prisma/client'
+import { Status, Priority } from '../prisma/enums'
 
 const router = Router()
 const prisma = new PrismaClient()
