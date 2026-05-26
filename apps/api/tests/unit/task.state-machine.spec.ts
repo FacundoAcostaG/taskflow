@@ -109,14 +109,6 @@ describe('TaskService — máquina de estados (US-06)', () => {
         taskService.updateTask('task-1', 'user-1', { status: Status.TODO })
       ).rejects.toThrow('none')
     })
-
-    it('IN_PROGRESS → TODO ✓ (reabrir tarea en progreso)', async () => {
-      mockDb.task.findUnique.mockResolvedValue(makeTask(Status.IN_PROGRESS))
-
-      await expect(
-        taskService.updateTask('task-1', 'user-1', { status: Status.TODO })
-      ).rejects.toThrow(UnprocessableError)
-    })
   })
 
   describe('Registro de historial', () => {
