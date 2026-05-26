@@ -1,0 +1,15 @@
+Lo que salió bien:
+
+  - Los mocks de Vitest están implementados con criterio profesional — el tipado con MockedObject<T> y el uso de importOriginal 
+    para preservar el módulo real son patrones avanzados.
+  - El POM de LoginPage está limpio y encapsulado — el spec no tiene un solo selector, todo pasa por los métodos de la página.
+  - El README es claro, completo, con instrucciones concretas.
+
+  Para corregir:
+  1. Describe anidado (Bloque A): muevan el describe('GET...') fuera del describe('POST...'). Es una línea de cambio pero refleja 
+  entendimiento de la estructura de la suite.
+  2. Import de Playwright (ProjectListPage): cambien 'playwright/test' por '@playwright/test'. Una letra @ que puede romper en otro entorno.
+  3. Race condition (Date.now()): agreguen Math.random() al email de registro cuando los tests corren en paralelo. Es el cambio mínimo 
+  para hacer los tests robustos.
+
+  *** CALIFICACIÓN: 90/100 ***

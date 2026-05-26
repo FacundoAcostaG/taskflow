@@ -1,26 +1,27 @@
 import { describe, it, expect, vi, beforeAll, type MockedObject } from 'vitest'
 import request from 'supertest'
 import { createApp } from '../../src/app'
+
 vi.mock('../../src/services/task.service', async (importOriginal) => {
-    const actual = await importOriginal<typeof import('../../src/services/task.service')>
-        ()
-    return {
-        ...actual,
-        TaskService: vi.fn().mockImplementation(() => ({
-            createTask: vi.fn(),
-            getTasksByProject: vi.fn(),
-        })),
-    }
+  const actual = await importOriginal<typeof import('../../src/services/task.service')>
+    ()
+  return {
+    ...actual,
+    TaskService: vi.fn().mockImplementation(() => ({
+      createTask: vi.fn(),
+      getTasks: vi.fn(),
+    })),
+  }
 })
 vi.mock('../../src/services/auth.service', async (importOriginal) => {
-    const actual = await importOriginal<typeof import('../../src/services/auth.service')>
-        ()
-    return {
-        ...actual,
-        AuthService: vi.fn().mockImplementation(() => ({
-            verifyToken: vi.fn().mockReturnValue({ id: 'user-1', email: 'ana@test.com' }),
-        })),
-    }
+  const actual = await importOriginal<typeof import('../../src/services/auth.service')>
+    ()
+  return {
+    ...actual,
+    AuthService: vi.fn().mockImplementation(() => ({
+      verifyToken: vi.fn().mockReturnValue({ id: 'user-1', email: 'ana@test.com' }),
+    })),
+  }
 })
 import { TaskService } from '../../src/services/task.service'
 import type { TaskService as TaskServiceType } from '../../src/services/task.service'
@@ -28,30 +29,32 @@ const app = createApp()
 const VALID_TOKEN = 'Bearer valid.jwt.token'
 let taskServiceMock: MockedObject<TaskServiceType>
 beforeAll(() => {
-    taskServiceMock = (TaskService as ReturnType<typeof vi.fn>).mock.results[0].value
+  taskServiceMock = (TaskService as ReturnType<typeof vi.fn>).mock.results[0].value
+
 })
 
-describe('POST /projects/:projectId/tasks', () => {
- it('201 — crea tarea y devuelve el objeto creado', async () => {
+describe('POST /api/projects/:projectId/tasks', () => {
+  it('201 — crea tarea y devuelve el objeto creado', async () => {
     taskServiceMock.createTask.mockResolvedValue({
-        id: 'task-1',
-        title: 'Implementar Login',
-        status: 'TODO',
-        priority: 'HIGH',
-        projectId: 'proj-1',
-        assignedTo: null,
-        description: null,
-        createdAt: new Date(),
-        updatedAt: new Date(),
-        assignee: null,
+      id: 'task-1',
+      title: 'Implementar Login',
+      status: 'TODO',
+      priority: 'HIGH',
+      projectId: 'proj-1',
+      assignedTo: null,
+      description: null,
+      createdAt: new Date(),
+      updatedAt: new Date(),
+      assignee: null,
     })
     const res = await request(app)
-        .post('/projects/proj-1/tasks')
-        .set('Authorization', VALID_TOKEN)
-        .send({ title: 'Implementar Login', priority: 'HIGH' })
+      .post('/api/projects/proj-1/tasks')
+      .set('Authorization', VALID_TOKEN)
+      .send({ title: 'Implementar Login', priority: 'HIGH' })
     expect(res.status).toBe(201)
     expect(res.body.id).toBeDefined()
     expect(res.body.title).toBe('Implementar Login')
+
 })
  it('400 — título vacío', async () => {
     // CORRECCIÓN 1: el mock anterior usaba mockResolvedValue, lo que hacía que
@@ -84,24 +87,28 @@ describe('POST /projects/:projectId/tasks', () => {
     expect(res.body.error).toBeDefined()
 })
 
- it('401 — sin token', async () => {
-        taskServiceMock.createTask.mockResolvedValue({
-        id: 'task-1',
-        title: '',
-        status: 'TODO',
-        priority: 'HIGH',
-        projectId: 'proj-1',
-        assignedTo: null,
-        description: null,
-        createdAt: new Date(),
-        updatedAt: new Date(),
-        assignee: null,
+
+  })
+
+  it('401 — post task sin token', async () => {
+    taskServiceMock.createTask.mockResolvedValue({
+      id: 'task-1',
+      title: '',
+      status: 'TODO',
+      priority: 'HIGH',
+      projectId: 'proj-1',
+      assignedTo: null,
+      description: null,
+      createdAt: new Date(),
+      updatedAt: new Date(),
+      assignee: null,
     })
     const res = await request(app)
-        .post('/projects/proj-1/tasks')
-        .set('Authorization', "")
-        .send({ title: '', priority: 'HIGH' })
+      .post('/api/projects/proj-1/tasks')
+      .set('Authorization', "")
+      .send({ title: '', priority: 'HIGH' })
     expect(res.status).toBe(401)
+
 })
 })
 
@@ -219,4 +226,18 @@ describe('POST /projects/:projectId/tasks', () => {
 // para ese escenario. Si el escenario es "título inválido", el mock debe
 // lanzar el error que lanzaría el servicio real en esa situación.
 //
+//
 // =============================================================================
+
+  })
+
+  /*describe('GET /api/projects/:projectId/tasks', () => {
+    it('200 — devuelve un array de tareas del proyecto', async () => {
+      
+    })
+    it('401 — Get tasks sin token', async () => {
+      
+    })
+  })*/
+})
+

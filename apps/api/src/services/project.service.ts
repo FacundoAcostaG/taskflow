@@ -45,7 +45,7 @@ export class ProjectService {
     return this.db.project.findMany({
       where: {
         members: { some: { userId } },
-        // archived: false  <-- intentionally omitted (BUG-06)
+        archived: false,
       },
       include: {
         owner: { select: { id: true, email: true, name: true } },

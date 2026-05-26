@@ -6,7 +6,7 @@ const router = Router()
 const prisma = new PrismaClient()
 const authService = new AuthService(prisma)
 
-// POST /auth/register
+// POST /api/auth/register
 router.post('/register', async (req, res, next) => {
   try {
     const result = await authService.register(req.body)
@@ -16,7 +16,7 @@ router.post('/register', async (req, res, next) => {
   }
 })
 
-// POST /auth/login
+// POST /api/auth/login
 router.post('/login', async (req, res, next) => {
   try {
     const result = await authService.login(req.body)

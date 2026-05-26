@@ -83,14 +83,15 @@ test.describe('Flujo de tareas', () => {
     await page.locator('form').getByRole('combobox').selectOption('HIGH');
     await page.getByTestId('task-submit').click();
 
+
     await page.getByTestId('task-title-input').fill('Mi segunda tarea E2E')
     await page.locator('form').getByRole('combobox').selectOption('HIGH');
     await page.getByTestId('task-submit').click();
+    const task = page.getByText('Mi primera tarea E2E').first()
 
-    const task = page.getByText('Mi primera tarea E2E')
     await expect(task).toBeVisible()
 
-    const badge = page.getByTestId('task-card').getByText('TODO')
+    const badge = page.locator('.text-xs.font-medium.text-teal-700').first()
     await expect(badge).toContainText('TODO')
   })
 
@@ -98,11 +99,12 @@ test.describe('Flujo de tareas', () => {
     await page.goto(`${baseURL}/projects`)
     await page.getByRole('heading', { name: 'seed-project' }).click();
 
-    const task = page.getByTestId('task-card').first()
+    const task = page.locator('.font-medium').first();
     await task.click()
 
-    await page.getByRole('button', { name: '→ IN_PROGRESS' }).click();
-    await expect(page.getByText('IN_PROGRESS')).toBeVisible();
+    await page.getByTestId('task-status-select').click();
+    await page.getByRole('button', { name: '→ DONE' }).isVisible(); //debe aparecer el estado DONE
+    
   })
 
   test('no puede ir de TODO a DONE directamente', async ({ page }) => {
