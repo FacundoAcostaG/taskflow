@@ -110,7 +110,6 @@ describe('POST /api/projects/:projectId/tasks', () => {
     expect(res.status).toBe(401)
 
 })
-})
 
 // =============================================================================
 // GUÍA DE MOCKS — Vitest (misma API que Jest)
@@ -229,8 +228,6 @@ describe('POST /api/projects/:projectId/tasks', () => {
 //
 // =============================================================================
 
-  })
-
   /*describe('GET /api/projects/:projectId/tasks', () => {
     it('200 — devuelve un array de tareas del proyecto', async () => {
       
@@ -239,5 +236,4 @@ describe('POST /api/projects/:projectId/tasks', () => {
       
     })
   })*/
-})
 

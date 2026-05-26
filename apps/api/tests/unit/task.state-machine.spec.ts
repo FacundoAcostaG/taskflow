@@ -111,10 +111,10 @@ describe('TaskService — máquina de estados (US-06)', () => {
     })
 
     it('IN_PROGRESS → TODO ✓ (reabrir tarea en progreso)', async () => {
-      mockDb.task.findUnique.mockResolvedValue(makeTask('IN_PROGRESS'))
+      mockDb.task.findUnique.mockResolvedValue(makeTask(Status.IN_PROGRESS))
 
       await expect(
-        taskService.updateTask('task-1', 'user-1', { status: 'TODO' })
+        taskService.updateTask('task-1', 'user-1', { status: Status.TODO })
       ).rejects.toThrow(UnprocessableError)
     })
   })
