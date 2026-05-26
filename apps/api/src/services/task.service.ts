@@ -37,6 +37,9 @@ export class TaskService {
   constructor(private db: PrismaClient) {}
 
   async createTask(projectId: string, userId: string, input: CreateTaskInput) {
+
+    this.validateTitle(input.title)
+
     const parsed = CreateTaskSchema.parse(input)
 
     await this.assertProjectMember(projectId, userId)
@@ -49,6 +52,7 @@ export class TaskService {
       },
       include: { assignee: { select: { id: true, email: true, name: true } } },
     })
+    
   }
 
   async updateTask(taskId: string, userId: string, input: UpdateTaskInput) {
