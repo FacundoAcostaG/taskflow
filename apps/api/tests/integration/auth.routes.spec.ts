@@ -23,9 +23,6 @@ import { AuthService, ConflictError, UnauthorizedError } from '../../src/service
 
 const app = createApp()
 
-function getAuthServiceMock() {
-  return (AuthService as any).mock.results[0].value
-}
 let authServiceMock: MockedObject<AuthService>
 beforeAll(() => {
     authServiceMock = (AuthService as ReturnType<typeof vi.fn>).mock.results[0].value
