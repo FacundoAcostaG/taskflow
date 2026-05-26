@@ -27,7 +27,7 @@ export type UpdateTaskInput = z.infer<typeof UpdateTaskSchema>
 // Valid state transitions
 const VALID_TRANSITIONS: Record<Status, Status[]> = {
   TODO: [Status.IN_PROGRESS],
-  IN_PROGRESS: [Status.DONE],
+  IN_PROGRESS: [Status.TODO, Status.DONE],
   // BUG-01: DONE should have no valid transitions.
   // This allows DONE -> TODO if payload includes force:true at route level.
   [Status.DONE]: [],
