@@ -42,10 +42,9 @@ jobs:
         run: npm run test:unit
         working-directory: apps/api
       - name: Upload coverage report
-        uses: codecov/codecov-action@v4
+        uses: codecov/codecov-action@v5
         with:
-          directory: apps/api/coverage
-          flags: unit
+          token: ${{ secrets.CODECOV_TOKEN }}
 
   # ── 3. Integration Tests ─────────────────────────────────────
   integration-tests:
