@@ -1,5 +1,7 @@
 # TaskFlow 🗂️
 
+[![CI](https://github.com/FacundoAcostaG/taskflow/actions/workflows/ci.yml/badge.svg)](https://github.com/FacundoAcostaG/taskflow/actions/workflows/ci.yml)
+
 Proyecto integrador del curso **Testing y Calidad de Software**.
 App de gestión de tareas (tipo Jira simplificado) con suite completa de tests.
 Equipo: Facundo Acosta y Pablo Constantino

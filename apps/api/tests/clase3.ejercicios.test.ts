@@ -11,6 +11,7 @@
 
 import bcrypt from 'bcryptjs';
 import { describe, it, expect, vi, beforeEach } from 'vitest';
+import { Status } from '../src/prisma/enums';
 import { AuthService } from '../src/services/auth.service';
 import { MAX_CHAR_TASK_NAME, MIN_CHAR_TASK_NAME, TaskService } from '../src/services/task.service';
 
@@ -72,31 +73,31 @@ describe('TaskService.validateStatusTransition', () => {
   });
 
   it('debe permitir la transicion TODO -> IN_PROGRESS', () => {
-    expect(() => svc['validateStatusTransition']('TODO', 'IN_PROGRESS')).not.toThrow();
+    expect(() => svc['validateStatusTransition'](Status.TODO, Status.IN_PROGRESS)).not.toThrow();
   });
 
   it('debe permitir la transicion IN_PROGRESS -> DONE', () => {
-    expect(() => svc['validateStatusTransition']('IN_PROGRESS', 'DONE')).not.toThrow();
+    expect(() => svc['validateStatusTransition'](Status.IN_PROGRESS, Status.DONE)).not.toThrow();
   });
 
   it('debe rechazar la transicion TODO -> DONE (salto de estado)', () => {
-    expect(() => svc['validateStatusTransition']('TODO', 'DONE')).toThrow();
+    expect(() => svc['validateStatusTransition'](Status.TODO, Status.DONE)).toThrow();
   });
 
   it('debe rechazar la transicion IN_PROGRESS -> TODO (retroceso)', () => {
-    expect(() => svc['validateStatusTransition']('IN_PROGRESS', 'TODO')).toThrow();
+    expect(() => svc['validateStatusTransition'](Status.IN_PROGRESS, Status.TODO)).toThrow();
   });
 
   it('debe rechazar cualquier transicion desde DONE (estado final)', () => {
-    expect(() => svc['validateStatusTransition']('DONE', 'TODO')).toThrow();
-    expect(() => svc['validateStatusTransition']('DONE', 'IN_PROGRESS')).toThrow();
-    expect(() => svc['validateStatusTransition']('DONE', 'DONE')).toThrow();
+    expect(() => svc['validateStatusTransition'](Status.DONE, Status.TODO)).toThrow();
+    expect(() => svc['validateStatusTransition'](Status.DONE, Status.IN_PROGRESS)).toThrow();
+    expect(() => svc['validateStatusTransition'](Status.DONE, Status.DONE)).toThrow();
   });
 
   it('debe rechazar la transicion al mismo estado', () => {
-    expect(() => svc['validateStatusTransition']('TODO', 'TODO')).toThrow();
-    expect(() => svc['validateStatusTransition']('IN_PROGRESS', 'IN_PROGRESS')).toThrow();
-    expect(() => svc['validateStatusTransition']('DONE', 'DONE')).toThrow();
+    expect(() => svc['validateStatusTransition'](Status.TODO, Status.TODO)).toThrow();
+    expect(() => svc['validateStatusTransition'](Status.IN_PROGRESS, Status.IN_PROGRESS)).toThrow();
+    expect(() => svc['validateStatusTransition'](Status.DONE, Status.DONE)).toThrow();
   });
 });
 
