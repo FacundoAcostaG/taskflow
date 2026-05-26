@@ -1,5 +1,5 @@
 // tests/integration/auth.routes.spec.ts
-import { describe, it, expect, vi } from 'vitest'
+import { describe, it, expect, vi, MockedObject } from 'vitest'
 import request from 'supertest'
 import { createApp } from '../../src/app'
 
@@ -23,13 +23,10 @@ import { AuthService, ConflictError, UnauthorizedError } from '../../src/service
 
 const app = createApp()
 
-function getAuthServiceMock() {
-  const authServiceMock = (AuthService as any).mock.results[0]?.value
-  if (authServiceMock) return authServiceMock
-
-  new (AuthService as any)()
-  return (AuthService as any).mock.results[0].value
-}
+let authServiceMock: MockedObject<AuthService>
+beforeAll(() => {
+    authServiceMock = (AuthService as ReturnType<typeof vi.fn>).mock.results[0].value
+})
 
 // ════════════════════════════════════════════════════════════════
 // POST /api/auth/register
@@ -37,8 +34,11 @@ function getAuthServiceMock() {
 describe('POST /api/auth/register', () => {
 
   it('201 — registro exitoso devuelve user y token', async () => {
-    getAuthServiceMock().register.mockResolvedValue({
-      user: { id: 'user-1', email: 'ana@test.com', name: 'Ana' },
+    authServiceMock.register.mockResolvedValue({
+      user: {
+        id: 'user-1', email: 'ana@test.com', name: 'Ana',
+        createdAt: new Date()
+      },
       token: 'jwt.token.here',
     })
 
@@ -52,7 +52,7 @@ describe('POST /api/auth/register', () => {
   })
 
   it('409 — email ya registrado', async () => {
-    getAuthServiceMock().register.mockRejectedValue(
+    authServiceMock.register.mockRejectedValue(
       new ConflictError('Email already registered')
     )
 
@@ -65,7 +65,7 @@ describe('POST /api/auth/register', () => {
   })
 
   it('400 — password débil', async () => {
-    getAuthServiceMock().register.mockRejectedValue(
+    authServiceMock.register.mockRejectedValue(
       Object.assign(new Error('Validation error'), { statusCode: 400 })
     )
 
@@ -77,7 +77,7 @@ describe('POST /api/auth/register', () => {
   })
 
   it('400 — email con formato inválido', async () => {
-    getAuthServiceMock().register.mockRejectedValue(
+    authServiceMock.register.mockRejectedValue(
       Object.assign(new Error('Invalid email format'), { statusCode: 400 })
     )
 
@@ -95,7 +95,7 @@ describe('POST /api/auth/register', () => {
 describe('POST /api/auth/login', () => {
 
   it('200 — login exitoso devuelve token', async () => {
-    getAuthServiceMock().login.mockResolvedValue({
+    authServiceMock.login.mockResolvedValue({
       user: { id: 'user-1', email: 'ana@test.com', name: 'Ana' },
       token: 'jwt.token.here',
     })
@@ -109,7 +109,7 @@ describe('POST /api/auth/login', () => {
   })
 
   it('401 — credenciales incorrectas', async () => {
-    getAuthServiceMock().login.mockRejectedValue(
+    authServiceMock.login.mockRejectedValue(
       new UnauthorizedError('Invalid credentials')
     )
 
@@ -122,7 +122,7 @@ describe('POST /api/auth/login', () => {
   })
 
   it('401 — cuenta bloqueada', async () => {
-    getAuthServiceMock().login.mockRejectedValue(
+    authServiceMock.login.mockRejectedValue(
       new UnauthorizedError('Account locked. Try again in 14 minutes')
     )
 

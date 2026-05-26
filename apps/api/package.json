@@ -3,6 +3,7 @@
   "version": "1.0.0",
   "private": true,
   "scripts": {
+    "postinstall": "prisma generate",
     "dev": "tsx watch src/index.ts",
     "build": "tsc",
     "start": "node dist/index.js",
@@ -11,7 +12,10 @@
     "test:unit": "vitest run tests/unit --coverage",
     "test:integration": "vitest run tests/integration",
     "test:bdd": "cucumber-js",
-    "test:watch": "vitest"
+    "test": "dotenv -e .env.test --override -- vitest run",
+    "test:watch": "dotenv -e .env.test --override -- vitest",
+    "test:pact": "vitest run tests/pact",
+    "db:migrate:test": "dotenv -e .env.test --override -- prisma migrate deploy --schema=src/prisma/schema.prisma"
   },
   "dependencies": {
     "@prisma/client": "^5.14.0",
@@ -22,10 +26,12 @@
     "zod": "^3.23.8"
   },
   "prisma": {
+    "schema": "src/prisma/schema.prisma",
     "seed": "tsx src/prisma/seed.ts"
   },
   "devDependencies": {
     "@cucumber/cucumber": "^10.8.0",
+    "@pact-foundation/pact": "^16.3.0",
     "@types/bcryptjs": "^2.4.6",
     "@types/cors": "^2.8.17",
     "@types/express": "^4.17.21",
