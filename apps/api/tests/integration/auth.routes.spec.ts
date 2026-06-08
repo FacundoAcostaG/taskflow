@@ -1,5 +1,6 @@
 // tests/integration/auth.routes.spec.ts
 import { describe, it, expect, vi, MockedObject } from 'vitest'
+import { description, feature, link, severity, step, story } from 'allure-vitest'
 import request from 'supertest'
 import { createApp } from '../../src/app'
 
@@ -33,7 +34,13 @@ beforeAll(() => {
 // ════════════════════════════════════════════════════════════════
 describe('POST /api/auth/register', () => {
 
-  it('201 — registro exitoso devuelve user y token', async () => {
+  it('201 — registro exitoso devuelve user y token', async (context) => {
+    await feature(context, 'Autenticación')
+    await story(context, 'US-01')
+    await severity(context, 'critical')
+    await link(context, 'custom', 'https://github.com/FacundoAcostaG/taskflow/blob/main/apps/api/src/routes/auth.routes.ts', 'POST /api/auth/register')
+    await description(context, 'Valida el happy path del endpoint de registro y confirma que la API expone usuario y token.')
+
     authServiceMock.register.mockResolvedValue({
       user: {
         id: 'user-1', email: 'ana@test.com', name: 'Ana',
@@ -42,13 +49,18 @@ describe('POST /api/auth/register', () => {
       token: 'jwt.token.here',
     })
 
-    const res = await request(app)
-      .post('/api/auth/register')
-      .send({ email: 'ana@test.com', password: 'Password1', name: 'Ana' })
+    let res: Awaited<ReturnType<typeof request>>
+    await step(context, 'Enviar un registro válido al endpoint HTTP', async () => {
+      res = await request(app)
+        .post('/api/auth/register')
+        .send({ email: 'ana@test.com', password: 'Password1', name: 'Ana' })
+    })
 
-    expect(res.status).toBe(201)
-    expect(res.body.token).toBeDefined()
-    expect(res.body.user.email).toBe('ana@test.com')
+    await step(context, 'Verificar el código 201 y el payload devuelto', async () => {
+      expect(res.status).toBe(201)
+      expect(res.body.token).toBeDefined()
+      expect(res.body.user.email).toBe('ana@test.com')
+    })
   })
 
   it('409 — email ya registrado', async () => {
@@ -121,17 +133,28 @@ describe('POST /api/auth/login', () => {
     expect(res.body.error).toMatch(/invalid credentials/i)
   })
 
-  it('401 — cuenta bloqueada', async () => {
+  it('401 — cuenta bloqueada', async (context) => {
+    await feature(context, 'Autenticación')
+    await story(context, 'US-02')
+    await severity(context, 'normal')
+    await link(context, 'custom', 'https://github.com/FacundoAcostaG/taskflow/blob/main/apps/api/src/routes/auth.routes.ts', 'POST /api/auth/login locked account')
+    await description(context, 'Asegura que la API comunica correctamente el estado de cuenta bloqueada en el login.')
+
     authServiceMock.login.mockRejectedValue(
       new UnauthorizedError('Account locked. Try again in 14 minutes')
     )
 
-    const res = await request(app)
-      .post('/api/auth/login')
-      .send({ email: 'ana@test.com', password: 'Password1' })
+    let res: Awaited<ReturnType<typeof request>>
+    await step(context, 'Intentar iniciar sesión con una cuenta bloqueada', async () => {
+      res = await request(app)
+        .post('/api/auth/login')
+        .send({ email: 'ana@test.com', password: 'Password1' })
+    })
 
-    expect(res.status).toBe(401)
-    expect(res.body.error).toMatch(/locked/i)
+    await step(context, 'Comprobar que la API responde 401 con mensaje de bloqueo', async () => {
+      expect(res.status).toBe(401)
+      expect(res.body.error).toMatch(/locked/i)
+    })
   })
 
   it('401 — endpoint de proyectos sin token devuelve 401', async () => {
