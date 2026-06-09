@@ -1,6 +1,6 @@
 import { describe, it, expect, beforeAll, afterAll, beforeEach } from 'vitest';
 import request from 'supertest';
-import { createApp } from '../src/app';
+import { createApp } from '../../src/app';
 import { PrismaClient } from '@prisma/client';
 
 const prisma = new PrismaClient();
