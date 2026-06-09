@@ -1,6 +1,6 @@
 import { describe, it, expect, beforeAll, afterAll, beforeEach } from 'vitest';
 import request from 'supertest';
-import { createApp } from '../src/app';
+import { createApp } from '../../src/app';
 import { PrismaClient } from '@prisma/client';
 
 const prisma = new PrismaClient();
@@ -13,7 +13,7 @@ describe('Proyectos API — US-03 y US-04', () => {
     beforeAll(async () => {
         // Registrar un usuario una sola vez para toda la suite
         const res = await request(app)
-            .post('/auth/register')
+            .post('/api/auth/register')
             .send({ email: 'tester@test.com', password: 'Test1234!' });
         token = res.body.token;
         userId = res.body.user.id;
@@ -35,7 +35,7 @@ describe('Proyectos API — US-03 y US-04', () => {
 
     it('crea un proyecto y devuelve 201 con id (@US-03)', async () => {
         const res = await request(app)
-            .post('/projects')
+            .post('/api/projects')
             .set('Authorization', `Bearer ${token}`)
             .send({ name: 'TaskFlow MVP', description: 'Primer sprint' });
 
@@ -52,7 +52,7 @@ describe('Proyectos API — US-03 y US-04', () => {
 
     it('rechaza nombre vacío con 400 (@US-03)', async () => {
         const res = await request(app)
-            .post('/projects')
+            .post('/api/projects')
             .set('Authorization', `Bearer ${token}`)
             .send({ name: '', description: 'Sin nombre' });
         expect(res.status).toBe(400);
@@ -61,7 +61,7 @@ describe('Proyectos API — US-03 y US-04', () => {
 
     it('rechaza petición sin token con 401 (@US-03)', async () => {
         const res = await request(app)
-            .post('/projects')
+            .post('/api/projects')
             .send({ name: 'Proyecto sin auth' });
 
         expect(res.status).toBe(401);
@@ -69,21 +69,22 @@ describe('Proyectos API — US-03 y US-04', () => {
 
     it('solo devuelve los proyectos del usuario autenticado (@US-04)', async () => {
         // Crear proyecto del primer usuario
-        await request(app).post('/projects')
+        await request(app).post('/api/projects')
             .set('Authorization', `Bearer ${token}`)
             .send({ name: 'Proyecto de tester1' });
 
         // Crear un segundo usuario
-        const res2 = await request(app).post('/auth/register')
+        const res2 = await request(app).post('/api/auth/register')
             .send({ email: 'otro@test.com', password: 'Test1234!' });
         const token2 = res2.body.token;
 
         // El segundo usuario lista SUS proyectos
-        const list = await request(app).get('/projects')
+        const list = await request(app).get('/api/projects')
             .set('Authorization', `Bearer ${token2}`);
 
         expect(list.status).toBe(200);
-        expect(list.body.projects).toBeUndefined();
+        expect(Array.isArray(list.body)).toBe(true);
+        expect(list.body).toHaveLength(0);
     });
 
 

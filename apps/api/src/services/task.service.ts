@@ -41,6 +41,7 @@ export class TaskService {
     this.validateTitle(input.title)
 
     const parsed = CreateTaskSchema.parse(input)
+    console.log('userId:', userId)
 
     await this.assertProjectMember(projectId, userId)
 

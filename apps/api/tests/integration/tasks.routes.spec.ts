@@ -76,7 +76,7 @@ describe('POST /api/projects/:projectId/tasks', () => {
         }])
     )
     const res = await request(app)
-        .post('/projects/proj-1/tasks')
+        .post('/api/projects/proj-1/tasks')
         .set('Authorization', VALID_TOKEN)
         .send({ title: '', priority: 'HIGH' })
     expect(res.status).toBe(400)

@@ -1,6 +1,6 @@
 import { describe, it, expect, beforeAll, afterAll, beforeEach } from 'vitest';
 import request from 'supertest';
-import { createApp } from '../src/app';
+import { createApp } from '../../src/app';
 import { PrismaClient } from '@prisma/client';
 
 const prisma = new PrismaClient();
@@ -12,7 +12,7 @@ describe('Tareas API — US-05', () => {
 
   beforeAll(async () => {
     const res = await request(app)
-      .post('/auth/register')
+      .post('/api/auth/register')
       .send({ email: 'tester-tasks@test.com', password: 'Test1234!' });
     token = res.body.token;
   });
@@ -22,7 +22,7 @@ describe('Tareas API — US-05', () => {
     await prisma.project.deleteMany();
 
     const res = await request(app)
-      .post('/projects')
+      .post('/api/projects')
       .set('Authorization', `Bearer ${token}`)
       .send({ name: 'Proyecto para tareas' });
     projectId = res.body.id;
@@ -34,9 +34,18 @@ describe('Tareas API — US-05', () => {
     await prisma.$disconnect();
   });
 
-  it('crea una tarea con prioridad válida (@US-05)', async () => {
+  it('rechaza prioridad inválida con 400 (@US-05)', async () => {
     const res = await request(app)
-      .post(`/projects/${projectId}/tasks`)
+      .post(`/api/projects/${projectId}/tasks`)
+      .set('Authorization', `Bearer ${token}`)
+      .send({ title: 'Tarea mala', priority: 'ULTRA' });
+
+    expect(res.status).toBe(400);
+  });
+
+  it('crea una tarea con prioridad válida (@US-05)', async () => { // tira error de "not a project member"
+    const res = await request(app)
+      .post(`/api/projects/${projectId}/tasks`)
       .set('Authorization', `Bearer ${token}`)
       .send({ title: 'Implementar login', priority: 'HIGH' });
 
@@ -45,12 +54,4 @@ describe('Tareas API — US-05', () => {
     expect(res.body.priority).toBe('HIGH');
   });
 
-  it('rechaza prioridad inválida con 400 (@US-05)', async () => {
-    const res = await request(app)
-      .post(`/projects/${projectId}/tasks`)
-      .set('Authorization', `Bearer ${token}`)
-      .send({ title: 'Tarea mala', priority: 'ULTRA' });
-
-    expect(res.status).toBe(400);
-  });
 });
