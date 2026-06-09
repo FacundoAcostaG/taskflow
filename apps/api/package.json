@@ -30,6 +30,8 @@
     "seed": "tsx src/prisma/seed.ts"
   },
   "devDependencies": {
+    "allure-js-commons": "^2.15.1",
+    "allure-vitest": "^2.15.1",
     "@cucumber/cucumber": "^10.8.0",
     "@pact-foundation/pact": "^16.3.0",
     "@types/bcryptjs": "^2.4.6",

@@ -160,6 +160,7 @@ describe('AuthService.handleFailedLogin', () => {
   });
 
   it('despues del 5to intento fallido: failedAttempts debe ser 5 y la cuenta SI debe estar bloqueada', async () => {
+
     const { authSvc, mockDb } = createAuthContext(4);
 
     await expect(

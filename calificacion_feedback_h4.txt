@@ -1,0 +1,22 @@
+CALIFICACIÓN: 84/100
+
+Bien:
+
+Identificaron los 3 bugs correctamente con líneas afectadas. 
+La descripción del Bug 2: Dicen "usa perf-load@test.com, usuario que no existe" en lugar de explicar que el VU ignora el token del setup, 
+pero la causa raíz está identificada.
+Orden de lectura de métricas correcto y bien justificado (error rate → percentiles → throughput).
+Parte 3, pregunta 1 — seleccionaron correctamente "Slow under heavy load" y lo justificaron con los datos: 
+latencia que se multiplica bajo spike sin generar errores.
+Parte 3, pregunta 3 — el razonamiento del threshold para spike es correcto: proponen p95 < 1000ms basándose en el valor real observado (852ms), 
+con margen razonable.
+Parte 4 — diagnóstico completo y preciso. Calcularon el deterioro en ms y porcentaje (1721%), identificaron la causa, la ubicación exacta y 
+clasificaron correctamente como Performance Efficiency.
+
+Para corregir
+
+Parte 3, pregunta 2 — recuperación del sistema. La justificación es incompleta, que la prueba finalizara sin errores no demuestra 
+recuperación de latencia. Para verificarlo hay que observar que los percentiles vuelven a niveles similares al load test cuando los 
+VUs bajan a 0 al final del spike.
+Faltó entregar resultados-clase9.md. El spike sí lo corrieron (tienen los valores en la tabla comparativa del documento), 
+pero no commitearon el archivo en el repo. Era un entregable explícito.
