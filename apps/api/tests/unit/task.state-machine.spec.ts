@@ -72,7 +72,7 @@ describe('TaskService — máquina de estados (US-06)', () => {
     it('TODO → DONE ✗ (saltar IN_PROGRESS)', async (context) => {
       await feature(context, 'Tareas')
       await story(context, 'US-06')
-      await severity(context, 'critical')
+      await severity(context, 'normal')
       await link(context, 'custom', 'https://github.com/FacundoAcostaG/taskflow/blob/main/apps/api/src/services/task.service.ts', 'TaskService.updateTask')
       await description(context, 'Verifica que la máquina de estados impide cerrar una tarea sin pasar antes por IN_PROGRESS.')
 

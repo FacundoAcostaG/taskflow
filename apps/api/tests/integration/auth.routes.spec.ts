@@ -1,7 +1,7 @@
 // tests/integration/auth.routes.spec.ts
 import { describe, it, expect, vi, MockedObject } from 'vitest'
 import { description, feature, link, severity, step, story } from 'allure-vitest'
-import request from 'supertest'
+import request, { type Response } from 'supertest'
 import { createApp } from '../../src/app'
 
 // In a real project these tests run against a test database.
@@ -49,7 +49,7 @@ describe('POST /api/auth/register', () => {
       token: 'jwt.token.here',
     })
 
-    let res: Awaited<ReturnType<typeof request>>
+    let res!: Response
     await step(context, 'Enviar un registro válido al endpoint HTTP', async () => {
       res = await request(app)
         .post('/api/auth/register')
@@ -144,7 +144,7 @@ describe('POST /api/auth/login', () => {
       new UnauthorizedError('Account locked. Try again in 14 minutes')
     )
 
-    let res: Awaited<ReturnType<typeof request>>
+    let res!: Response
     await step(context, 'Intentar iniciar sesión con una cuenta bloqueada', async () => {
       res = await request(app)
         .post('/api/auth/login')

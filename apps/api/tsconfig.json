@@ -3,7 +3,7 @@
   "compilerOptions": {
     "rootDir": ".",
     "outDir": "dist",
-    "module": "CommonJS",
+    "module": "Node16",
     "moduleResolution": "node16",
     "types": ["vitest/globals", "node"]
   },
