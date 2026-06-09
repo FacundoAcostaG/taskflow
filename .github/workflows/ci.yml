@@ -22,8 +22,8 @@ jobs:
           node-version: ${{ env.NODE_VERSION }}
           cache: 'npm'
       - run: npm ci
-      - name: Reinstall optional native deps for Linux
-        run: npm install --include=optional
+      - name: Install Rollup native binary for Linux
+        run: npm install --no-save @rollup/rollup-linux-x64-gnu@4.59.0
       - name: Generate Prisma client
         run: npx prisma generate
         working-directory: apps/api
@@ -43,8 +43,8 @@ jobs:
           node-version: ${{ env.NODE_VERSION }}
           cache: 'npm'
       - run: npm ci
-      - name: Reinstall optional native deps for Linux
-        run: npm install --include=optional
+      - name: Install Rollup native binary for Linux
+        run: npm install --no-save @rollup/rollup-linux-x64-gnu@4.59.0
       - name: Run unit tests with coverage
         run: npm run test:unit
         working-directory: apps/api
@@ -82,8 +82,8 @@ jobs:
           node-version: ${{ env.NODE_VERSION }}
           cache: 'npm'
       - run: npm ci
-      - name: Reinstall optional native deps for Linux
-        run: npm install --include=optional
+      - name: Install Rollup native binary for Linux
+        run: npm install --no-save @rollup/rollup-linux-x64-gnu@4.59.0
       - name: Run Prisma migrations
         run: npx prisma migrate deploy
         working-directory: apps/api
@@ -120,8 +120,8 @@ jobs:
           node-version: ${{ env.NODE_VERSION }}
           cache: 'npm'
       - run: npm ci
-      - name: Reinstall optional native deps for Linux
-        run: npm install --include=optional
+      - name: Install Rollup native binary for Linux
+        run: npm install --no-save @rollup/rollup-linux-x64-gnu@4.59.0
       - run: npx prisma migrate deploy
         working-directory: apps/api
       - name: Run BDD scenarios
@@ -158,8 +158,8 @@ jobs:
           node-version: ${{ env.NODE_VERSION }}
           cache: 'npm'
       - run: npm ci
-      - name: Reinstall optional native deps for Linux
-        run: npm install --include=optional
+      - name: Install Rollup native binary for Linux
+        run: npm install --no-save @rollup/rollup-linux-x64-gnu@4.59.0
       - run: npx playwright install --with-deps chromium
       - run: npx prisma migrate deploy && npx prisma db seed
         working-directory: apps/api
