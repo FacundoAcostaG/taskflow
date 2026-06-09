@@ -83,7 +83,8 @@ describe('Proyectos API — US-03 y US-04', () => {
             .set('Authorization', `Bearer ${token2}`);
 
         expect(list.status).toBe(200);
-        expect(list.body.projects).toBeUndefined();
+        expect(Array.isArray(list.body)).toBe(true);
+        expect(list.body).toHaveLength(0);
     });
 
 
