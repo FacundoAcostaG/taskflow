@@ -15,7 +15,6 @@ vi.mock('../../src/services/auth.service', async (importOriginal) => {
   }
 })
 
-import { AuthService } from '../../src/services/auth.service'
 import {
   errorHandler,
   requireAuth,

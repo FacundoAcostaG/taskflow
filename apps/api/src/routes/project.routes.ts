@@ -59,10 +59,11 @@ router.post('/:projectId/tasks', requireAuth, async (req: AuthRequest, res, next
   try {
     const task = await taskService.createTask(req.params.projectId, req.userId!, req.body)
     res.status(201).json(task)
-  } catch (err) { 
+  } catch (err) {
     const errorMessage = err instanceof Error ? err.message : 'Unknown error'
-    console.log('Error creating task:', errorMessage)
-    next(err) }
+    console.warn('Error creating task:', errorMessage)
+    next(err)
+  }
 })
 
 // ── Comments ──────────────────────────────────────────────────
