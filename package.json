@@ -24,6 +24,7 @@
     "test:mobile": "cd mobile && npx wdio run wdio.conf.ts"
   },
   "devDependencies": {
+    "@axe-core/playwright": "^4.12.1",
     "@cucumber/cucumber": "^10.8.0",
     "@eslint/js": "^10.0.1",
     "@pact-foundation/pact": "^16.4.0",

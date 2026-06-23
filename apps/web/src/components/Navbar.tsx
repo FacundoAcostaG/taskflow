@@ -15,7 +15,7 @@ export default function Navbar() {
       data-testid="navbar"
       className="bg-white border-b border-gray-200 px-6 py-3 flex items-center justify-between"
     >
-      <Link to="/projects" className="text-teal-600 font-bold text-lg">
+      <Link to="/projects" className="text-teal-700 font-bold text-lg">
         TaskFlow
       </Link>
       <button
