@@ -84,8 +84,8 @@ describe('TaskService.validateStatusTransition', () => {
     expect(() => svc['validateStatusTransition'](Status.TODO, Status.DONE)).toThrow();
   });
 
-  it('debe rechazar la transicion IN_PROGRESS -> TODO (retroceso)', () => {
-    expect(() => svc['validateStatusTransition'](Status.IN_PROGRESS, Status.TODO)).toThrow();
+  it('debe permitir la transicion IN_PROGRESS -> TODO (reapertura controlada)', () => {
+    expect(() => svc['validateStatusTransition'](Status.IN_PROGRESS, Status.TODO)).not.toThrow();
   });
 
   it('debe rechazar cualquier transicion desde DONE (estado final)', () => {

@@ -22,8 +22,8 @@ test.describe('Accesibilidad WCAG 2.1 AA - TaskFlow', () => {
 
   test('Vista Proyectos - sin violaciones WCAG 2.1 AA', async ({ page }) => {
     await page.goto('/login');
-    await page.getByTestId('login-email').fill('probando@probando.com');
-    await page.getByTestId('login-password').fill('Probando1');
+    await page.getByTestId('login-email').fill('alice@taskflow.dev');
+    await page.getByTestId('login-password').fill('Password1');
     await page.getByRole('button', { name: 'Entrar' }).click();
     await page.waitForURL('/projects');
 
