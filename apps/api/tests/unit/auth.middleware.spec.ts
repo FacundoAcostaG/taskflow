@@ -1,4 +1,5 @@
 import { beforeEach, describe, expect, it, vi } from 'vitest'
+import type { NextFunction } from 'express'
 import { ZodError, ZodIssueCode } from 'zod'
 
 const { authServiceInstance } = vi.hoisted(() => ({
@@ -27,12 +28,13 @@ describe('auth middleware', () => {
   })
 
   it('returns 401 when the authorization header is missing', () => {
+    const next = vi.fn() as unknown as NextFunction
     const json = vi.fn()
     const res = {
       status: vi.fn().mockReturnValue({ json }),
     }
 
-    requireAuth({ headers: {} } as AuthRequest, res as any, vi.fn())
+    requireAuth({ headers: {} } as AuthRequest, res as any, next)
 
     expect(res.status).toHaveBeenCalledWith(401)
     expect(json).toHaveBeenCalledWith({
@@ -42,7 +44,7 @@ describe('auth middleware', () => {
 
   it('stores userId and calls next for a valid bearer token', () => {
     authServiceInstance.verifyToken.mockReturnValue({ userId: 'user-1' })
-    const next = vi.fn()
+    const next = vi.fn() as unknown as NextFunction
     const req = {
       headers: { authorization: 'Bearer valid-token' },
     } as AuthRequest
@@ -58,6 +60,7 @@ describe('auth middleware', () => {
     authServiceInstance.verifyToken.mockImplementation(() => {
       throw new Error('bad token')
     })
+    const next = vi.fn() as unknown as NextFunction
     const json = vi.fn()
     const res = {
       status: vi.fn().mockReturnValue({ json }),
@@ -66,7 +69,7 @@ describe('auth middleware', () => {
     requireAuth(
       { headers: { authorization: 'Bearer bad-token' } } as AuthRequest,
       res as any,
-      vi.fn()
+      next
     )
 
     expect(res.status).toHaveBeenCalledWith(401)
@@ -79,18 +82,20 @@ describe('errorHandler', () => {
     status: ReturnType<typeof vi.fn>
     json: ReturnType<typeof vi.fn>
   }
+  let next: NextFunction
 
   beforeEach(() => {
     res = {
       status: vi.fn().mockReturnThis(),
       json: vi.fn(),
     }
+    next = vi.fn() as unknown as NextFunction
   })
 
   it('returns the provided status for known application errors', () => {
     const err = Object.assign(new Error('Forbidden'), { statusCode: 403 })
 
-    errorHandler(err, {} as any, res as any, vi.fn())
+    errorHandler(err, {} as any, res as any, next)
 
     expect(res.status).toHaveBeenCalledWith(403)
     expect(res.json).toHaveBeenCalledWith({ error: 'Forbidden' })
@@ -109,7 +114,7 @@ describe('errorHandler', () => {
       },
     ])
 
-    errorHandler(zodError, {} as any, res as any, vi.fn())
+    errorHandler(zodError, {} as any, res as any, next)
 
     expect(res.status).toHaveBeenCalledWith(400)
     expect(res.json).toHaveBeenCalledWith({
@@ -121,7 +126,7 @@ describe('errorHandler', () => {
   it('hides internal details for unexpected errors', () => {
     const consoleSpy = vi.spyOn(console, 'error').mockImplementation(() => {})
 
-    errorHandler(new Error('boom'), {} as any, res as any, vi.fn())
+    errorHandler(new Error('boom'), {} as any, res as any, next)
 
     expect(res.status).toHaveBeenCalledWith(500)
     expect(res.json).toHaveBeenCalledWith({ error: 'Internal server error' })

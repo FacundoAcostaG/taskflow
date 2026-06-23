@@ -29,7 +29,6 @@ describe('TaskService extra coverage', () => {
   })
 
   it('creates a task for a valid project member', async () => {
-    const consoleSpy = vi.spyOn(console, 'log').mockImplementation(() => {})
     mockDb.projectMember.findUnique.mockResolvedValue({ userId: 'user-1' })
     mockDb.task.create.mockResolvedValue({ id: 'task-1', title: 'Build API' })
 
@@ -50,7 +49,6 @@ describe('TaskService extra coverage', () => {
       },
       include: { assignee: { select: { id: true, email: true, name: true } } },
     })
-    expect(consoleSpy).toHaveBeenCalledWith('userId:', 'user-1')
   })
 
   it('rejects task creation when the user is not a member', async () => {

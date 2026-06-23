@@ -1,5 +1,6 @@
 import { beforeEach, describe, expect, it, vi, type MockedObject } from 'vitest'
 import request from 'supertest'
+import { Priority, Status } from '../../src/prisma/enums'
 
 const { commentServiceInstance, projectServiceInstance, taskServiceInstance } =
   vi.hoisted(() => ({
@@ -59,6 +60,109 @@ import { TaskService } from '../../src/services/task.service'
 
 const app = createApp()
 const authHeader = { Authorization: 'Bearer valid-token' }
+const now = new Date('2026-06-23T00:00:00.000Z')
+
+type ListProjectsResult = Awaited<ReturnType<ProjectService['listProjects']>>
+type GetProjectResult = Awaited<ReturnType<ProjectService['getProject']>>
+type CreateProjectResult = Awaited<ReturnType<ProjectService['createProject']>>
+type ArchiveProjectResult = Awaited<ReturnType<ProjectService['archiveProject']>>
+type GetTasksResult = Awaited<ReturnType<TaskService['getTasks']>>
+type GetCommentsResult = Awaited<ReturnType<CommentService['getComments']>>
+type AddCommentResult = Awaited<ReturnType<CommentService['addComment']>>
+
+const projectListItem: ListProjectsResult[number] = {
+  id: 'project-1',
+  name: 'Alpha',
+  description: 'Main project',
+  archived: false,
+  ownerId: 'user-1',
+  createdAt: now,
+  updatedAt: now,
+  owner: {
+    id: 'user-1',
+    email: 'ana@test.com',
+    name: 'Ana',
+  },
+  _count: {
+    tasks: 3,
+    members: 2,
+  },
+}
+
+const createdProject: CreateProjectResult = {
+  id: 'project-1',
+  name: 'Alpha',
+  description: 'Main project',
+  archived: false,
+  ownerId: 'user-1',
+  createdAt: now,
+  updatedAt: now,
+}
+
+const projectDetail: GetProjectResult = {
+  id: 'project-1',
+  name: 'Alpha',
+  description: 'Main project',
+  archived: false,
+  ownerId: 'user-1',
+  createdAt: now,
+  updatedAt: now,
+  owner: {
+    id: 'user-1',
+    email: 'ana@test.com',
+    name: 'Ana',
+  },
+  members: [
+    {
+      id: 'member-1',
+      projectId: 'project-1',
+      userId: 'user-1',
+      role: 'OWNER',
+      createdAt: now,
+      user: {
+        id: 'user-1',
+        email: 'ana@test.com',
+        name: 'Ana',
+      },
+    },
+  ],
+  _count: {
+    tasks: 3,
+  },
+}
+
+const archivedProject: ArchiveProjectResult = {
+  ...createdProject,
+  archived: true,
+}
+
+const taskListItem: GetTasksResult[number] = {
+  id: 'task-1',
+  title: 'Implement login',
+  description: 'Build auth UI',
+  status: Status.TODO,
+  priority: Priority.HIGH,
+  projectId: 'project-1',
+  assignedTo: null,
+  createdAt: now,
+  updatedAt: now,
+  assignee: null,
+}
+
+const commentListItem: GetCommentsResult[number] = {
+  id: 'comment-1',
+  body: 'Looks good',
+  taskId: 'task-1',
+  authorId: 'user-1',
+  createdAt: now,
+  author: {
+    id: 'user-1',
+    email: 'ana@test.com',
+    name: 'Ana',
+  },
+}
+
+const createdComment: AddCommentResult = commentListItem
 
 describe('project routes', () => {
   let projectServiceMock: MockedObject<ProjectService>
@@ -80,17 +184,18 @@ describe('project routes', () => {
   })
 
   it('lists projects for the authenticated user', async () => {
-    projectServiceMock.listProjects.mockResolvedValue([{ id: 'project-1' }])
+    projectServiceMock.listProjects.mockResolvedValue([projectListItem])
 
     const res = await request(app).get('/api/projects').set(authHeader)
 
     expect(res.status).toBe(200)
-    expect(res.body).toEqual([{ id: 'project-1' }])
+    expect(res.body).toHaveLength(1)
+    expect(res.body[0].id).toBe('project-1')
     expect(projectServiceMock.listProjects).toHaveBeenCalledWith('user-1')
   })
 
   it('creates a project', async () => {
-    projectServiceMock.createProject.mockResolvedValue({ id: 'project-1' })
+    projectServiceMock.createProject.mockResolvedValue(createdProject)
 
     const res = await request(app)
       .post('/api/projects')
@@ -104,7 +209,7 @@ describe('project routes', () => {
   })
 
   it('returns a single project', async () => {
-    projectServiceMock.getProject.mockResolvedValue({ id: 'project-1' })
+    projectServiceMock.getProject.mockResolvedValue(projectDetail)
 
     const res = await request(app)
       .get('/api/projects/project-1')
@@ -118,10 +223,7 @@ describe('project routes', () => {
   })
 
   it('archives a project', async () => {
-    projectServiceMock.archiveProject.mockResolvedValue({
-      id: 'project-1',
-      archived: true,
-    })
+    projectServiceMock.archiveProject.mockResolvedValue(archivedProject)
 
     const res = await request(app)
       .patch('/api/projects/project-1/archive')
@@ -135,7 +237,7 @@ describe('project routes', () => {
   })
 
   it('forwards task filters from query params', async () => {
-    taskServiceMock.getTasks.mockResolvedValue([{ id: 'task-1' }])
+    taskServiceMock.getTasks.mockResolvedValue([taskListItem])
 
     const res = await request(app)
       .get('/api/projects/project-1/tasks')
@@ -157,7 +259,7 @@ describe('project routes', () => {
   })
 
   it('returns project task comments', async () => {
-    commentServiceMock.getComments.mockResolvedValue([{ id: 'comment-1' }])
+    commentServiceMock.getComments.mockResolvedValue([commentListItem])
 
     const res = await request(app)
       .get('/api/projects/project-1/tasks/task-1/comments')
@@ -171,7 +273,7 @@ describe('project routes', () => {
   })
 
   it('creates a task comment', async () => {
-    commentServiceMock.addComment.mockResolvedValue({ id: 'comment-1' })
+    commentServiceMock.addComment.mockResolvedValue(createdComment)
 
     const res = await request(app)
       .post('/api/projects/project-1/tasks/task-1/comments')
