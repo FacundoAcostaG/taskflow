@@ -14,16 +14,17 @@ describe('Tareas API — US-05', () => {
     await prisma.task.deleteMany();
     await prisma.project.deleteMany();
     await prisma.user.deleteMany({ where: { email: 'tester-tasks@test.com' } });
-
-    const res = await request(app)
-      .post('/api/auth/register')
-      .send({ email: 'tester-tasks@test.com', password: 'Test1234!' });
-    token = res.body.token;
   });
 
   beforeEach(async () => {
     await prisma.task.deleteMany();
     await prisma.project.deleteMany();
+    await prisma.user.deleteMany({ where: { email: 'tester-tasks@test.com' } });
+
+    const authRes = await request(app)
+      .post('/api/auth/register')
+      .send({ email: 'tester-tasks@test.com', password: 'Test1234!' });
+    token = authRes.body.token;
 
     const res = await request(app)
       .post('/api/projects')
