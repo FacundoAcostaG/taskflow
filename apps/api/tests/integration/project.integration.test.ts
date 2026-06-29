@@ -9,12 +9,22 @@ const app = createApp();
 describe('Proyectos API — US-03 y US-04', () => {
     let token: string;
     let userId: string;
+    const suiteEmails = ['tester@test.com', 'otro@test.com'];
 
     beforeAll(async () => {
+        await prisma.task.deleteMany();
+        await prisma.project.deleteMany();
+        await prisma.user.deleteMany({ where: { email: { in: suiteEmails } } });
+
         // Registrar un usuario una sola vez para toda la suite
         const res = await request(app)
             .post('/api/auth/register')
             .send({ email: 'tester@test.com', password: 'Test1234!' });
+
+        expect(res.status).toBe(201);
+        expect(res.body).toHaveProperty('token');
+        expect(res.body.user).toHaveProperty('id');
+
         token = res.body.token;
         userId = res.body.user.id;
     });
@@ -28,7 +38,7 @@ describe('Proyectos API — US-03 y US-04', () => {
     afterAll(async () => {
         await prisma.task.deleteMany();
         await prisma.project.deleteMany();
-        await prisma.user.deleteMany();
+        await prisma.user.deleteMany({ where: { email: { in: suiteEmails } } });
         await prisma.$disconnect();
     });
 
@@ -76,6 +86,8 @@ describe('Proyectos API — US-03 y US-04', () => {
         // Crear un segundo usuario
         const res2 = await request(app).post('/api/auth/register')
             .send({ email: 'otro@test.com', password: 'Test1234!' });
+        expect(res2.status).toBe(201);
+        expect(res2.body).toHaveProperty('token');
         const token2 = res2.body.token;
 
         // El segundo usuario lista SUS proyectos

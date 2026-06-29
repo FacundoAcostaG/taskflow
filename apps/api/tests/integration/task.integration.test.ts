@@ -18,6 +18,11 @@ describe('Tareas API — US-05', () => {
     const res = await request(app)
       .post('/api/auth/register')
       .send({ email: 'tester-tasks@test.com', password: 'Test1234!' });
+
+    expect(res.status).toBe(201);
+    expect(res.body).toHaveProperty('token');
+    expect(res.body.user).toHaveProperty('id');
+
     token = res.body.token;
   });
 
@@ -29,6 +34,10 @@ describe('Tareas API — US-05', () => {
       .post('/api/projects')
       .set('Authorization', `Bearer ${token}`)
       .send({ name: 'Proyecto para tareas' });
+
+    expect(res.status).toBe(201);
+    expect(res.body).toHaveProperty('id');
+
     projectId = res.body.id;
   });
 
@@ -37,15 +46,6 @@ describe('Tareas API — US-05', () => {
     await prisma.project.deleteMany();
     await prisma.user.deleteMany({ where: { email: 'tester-tasks@test.com' } });
     await prisma.$disconnect();
-  });
-
-  it('rechaza prioridad inválida con 400 (@US-05)', async () => {
-    const res = await request(app)
-      .post(`/api/projects/${projectId}/tasks`)
-      .set('Authorization', `Bearer ${token}`)
-      .send({ title: 'Tarea mala', priority: 'ULTRA' });
-
-    expect(res.status).toBe(400);
   });
 
   it('crea una tarea con prioridad válida (@US-05)', async () => { // tira error de "not a project member"
@@ -57,6 +57,15 @@ describe('Tareas API — US-05', () => {
     expect(res.status).toBe(201);
     expect(res.body).toHaveProperty('id');
     expect(res.body.priority).toBe('HIGH');
+  });
+
+  it('rechaza prioridad inválida con 400 (@US-05)', async () => {
+    const res = await request(app)
+      .post(`/api/projects/${projectId}/tasks`)
+      .set('Authorization', `Bearer ${token}`)
+      .send({ title: 'Tarea mala', priority: 'ULTRA' });
+
+    expect(res.status).toBe(400);
   });
 
 });
