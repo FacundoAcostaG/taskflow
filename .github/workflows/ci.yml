@@ -155,7 +155,7 @@ jobs:
       - run: npm ci
       - name: Install Rollup native binary for Linux
         run: npm install --no-save @rollup/rollup-linux-x64-gnu@4.59.0
-      - run: npx playwright install --with-deps chromium
+      - run: npx playwright install --with-deps chromium webkit
       - run: npx prisma migrate deploy && npx prisma db seed
         working-directory: apps/api
       - name: Run E2E tests
