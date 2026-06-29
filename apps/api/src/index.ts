@@ -4,5 +4,5 @@ const PORT = process.env.PORT ?? 3001
 const app = createApp()
 
 app.listen(PORT, () => {
-  console.log(`🚀 TaskFlow API running on http://localhost:${PORT}`)
+  process.stdout.write(`TaskFlow API running on http://localhost:${PORT}\n`)
 })

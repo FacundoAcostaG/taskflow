@@ -5,6 +5,10 @@ import { PrismaClient } from '@prisma/client'
 const prisma = new PrismaClient()
 const authService = new AuthService(prisma)
 
+type HttpError = Error & {
+  statusCode?: number
+}
+
 export interface AuthRequest extends Request {
   userId?: string
 }
@@ -26,7 +30,7 @@ export function requireAuth(req: AuthRequest, res: Response, next: NextFunction)
 }
 
 export function errorHandler(err: Error, _req: Request, res: Response, _next: NextFunction) {
-  const status = (err as any).statusCode ?? 500
+  const status = (err as HttpError).statusCode ?? 500
   const message = status === 500 ? 'Internal server error' : err.message
 
   if (status === 500) console.error(err)
