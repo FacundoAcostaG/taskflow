@@ -9,9 +9,15 @@ const taskService = new TaskService(prisma)
 
 router.patch('/:taskId', requireAuth, async (req: AuthRequest, res, next) => {
   try {
-    const task = await taskService.updateTask(req.params.taskId, req.userId!, req.body)
+    const task = await taskService.updateTask(
+      req.params.taskId,
+      req.userId!,
+      req.body
+    )
     res.json(task)
-  } catch (err) { next(err) }
+  } catch (err) {
+    next(err)
+  }
 })
 
 export default router

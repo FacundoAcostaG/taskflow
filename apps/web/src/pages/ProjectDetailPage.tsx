@@ -146,7 +146,9 @@ export default function ProjectDetailPage() {
           </li>
         ))}
         {tasks.length === 0 && (
-          <p className="text-gray-500 text-sm">No hay tareas en este proyecto.</p>
+          <p className="text-gray-500 text-sm">
+            No hay tareas en este proyecto.
+          </p>
         )}
       </ul>
     </main>

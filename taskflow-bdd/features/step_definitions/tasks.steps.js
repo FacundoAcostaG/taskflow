@@ -1,7 +1,7 @@
 // features/step_definitions/tasks.steps.js
-const { Given, When, Then } = require('@cucumber/cucumber');
-const { expect } = require('chai');
-const axios = require('axios');
+const { Given, When, Then } = require('@cucumber/cucumber')
+const { expect } = require('chai')
+const axios = require('axios')
 
 const BASE_URL = process.env.TASKFLOW_URL || 'http://localhost:3001';
 const api = axios.create({ baseURL: BASE_URL, validateStatus: () => true });

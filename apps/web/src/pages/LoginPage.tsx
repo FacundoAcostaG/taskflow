@@ -1,8 +1,8 @@
 import { useState } from 'react'
 import { Link, useNavigate } from 'react-router-dom'
+import axios from 'axios'
 import { authApi } from '../api/client'
 import { useAuth } from '../contexts/AuthContext'
-import axios from 'axios'
 
 export default function LoginPage() {
   const [email, setEmail] = useState('')
@@ -30,11 +30,19 @@ export default function LoginPage() {
   return (
     <div className="min-h-screen bg-gray-50 flex items-center justify-center px-4">
       <div className="w-full max-w-sm bg-white rounded-xl shadow-sm border border-gray-200 p-8">
-        <h1 className="text-2xl font-bold text-gray-900 mb-6">Iniciar sesión</h1>
+        <h1 className="text-2xl font-bold text-gray-900 mb-6">
+          Iniciar sesión
+        </h1>
         <form onSubmit={handleSubmit} className="space-y-4">
           <div>
-            <label className="block text-sm font-medium text-gray-700 mb-1">Email</label>
+            <label
+              htmlFor="login-email"
+              className="block text-sm font-medium text-gray-700 mb-1"
+            >
+              Email
+            </label>
             <input
+              id="login-email"
               data-testid="login-email"
               type="email"
               value={email}
@@ -44,8 +52,14 @@ export default function LoginPage() {
             />
           </div>
           <div>
-            <label className="block text-sm font-medium text-gray-700 mb-1">Contraseña</label>
+            <label
+              htmlFor="login-password"
+              className="block text-sm font-medium text-gray-700 mb-1"
+            >
+              Contraseña
+            </label>
             <input
+              id="login-password"
               data-testid="login-password"
               type="password"
               value={password}
@@ -62,14 +76,17 @@ export default function LoginPage() {
           <button
             data-testid="login-submit"
             type="submit"
-            className="w-full bg-teal-600 text-white rounded-lg py-2 text-sm font-medium hover:bg-teal-700"
+            className="w-full bg-teal-700 text-white rounded-lg py-2 text-sm font-medium hover:bg-teal-800 focus:outline-none focus:ring-2 focus:ring-teal-500 focus:ring-offset-2"
           >
             Entrar
           </button>
         </form>
         <p className="text-sm text-gray-500 mt-4 text-center">
           ¿No tenés cuenta?{' '}
-          <Link to="/register" className="text-teal-600 hover:underline">
+          <Link
+            to="/register"
+            className="font-medium text-teal-700 underline underline-offset-2 decoration-current hover:text-teal-800"
+          >
             Registrate
           </Link>
         </p>

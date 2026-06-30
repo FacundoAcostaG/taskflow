@@ -22,6 +22,7 @@ Los tests están escritos en `apps/api/tests/project.integration.test.ts` pero e
 
 **US-05 — parcial (2/8):**
 En `tests/integration/tasks.routes.spec.ts` (sí recogido por el script):
+
 - Happy path 201 **pasa** pero solo verifica `id` y `title`, no `priority` → 2/3 pts
 - "400 — título vacío" **falla** con 404 porque la ruta es `/projects/proj-1/tasks` en lugar de `/api/projects/proj-1/tasks`
 - No hay test para prioridad inválida ni para status inicial distinto de TODO
@@ -60,26 +61,27 @@ Lines coverage: **36.7%** (umbral requerido: ≥ 70%). Los unit tests solo cubre
 
 ## Calificación
 
-| Sección | Ítem | Pts obtenidos | Pts máx |
-|---------|------|:---:|:---:|
-| **A. Endpoints + integration tests** | US-03 POST /api/projects — tests no corren (carpeta incorrecta + rutas equivocadas) | 0 | 9 |
-| | US-04 GET /api/projects — tests no corren (mismos problemas) | 0 | 8 |
-| | US-05 POST /api/projects/:id/tasks — happy path pasa sin verificar priority; errores no cubiertos o fallan | 2 | 8 |
-| **B. Gherkin US-01..05** | US-01 — 0/4 escenarios pasan (ambiguous) | 0 | 7 |
-| | US-02 — 0/2 escenarios pasan (ambiguous) | 0 | 7 |
-| | US-03 — 0/2 escenarios pasan (ambiguous) | 0 | 7 |
-| | US-04 — 0/2 escenarios pasan (ambiguous) | 0 | 7 |
-| | US-05 — 0/4 escenarios pasan (ambiguous) | 0 | 7 |
-| **C. Contrato Pact** | Consumer — test falla, no genera `pacts/*.json` | 0 | 10 |
-| | Provider — no existe archivo de verificación | 0 | 10 |
-| **D. Calidad** | Lint — 0 errores (14 warnings) | 7 | 7 |
-| | TypeScript — `tsc --noEmit` sin errores | 6 | 6 |
-| | Coverage — 36.7% líneas (< 70%) | 0 | 7 |
-| **TOTAL** | | **15** | **100** |
+| Sección                              | Ítem                                                                                                       | Pts obtenidos | Pts máx |
+| ------------------------------------ | ---------------------------------------------------------------------------------------------------------- | :-----------: | :-----: |
+| **A. Endpoints + integration tests** | US-03 POST /api/projects — tests no corren (carpeta incorrecta + rutas equivocadas)                        |       0       |    9    |
+|                                      | US-04 GET /api/projects — tests no corren (mismos problemas)                                               |       0       |    8    |
+|                                      | US-05 POST /api/projects/:id/tasks — happy path pasa sin verificar priority; errores no cubiertos o fallan |       2       |    8    |
+| **B. Gherkin US-01..05**             | US-01 — 0/4 escenarios pasan (ambiguous)                                                                   |       0       |    7    |
+|                                      | US-02 — 0/2 escenarios pasan (ambiguous)                                                                   |       0       |    7    |
+|                                      | US-03 — 0/2 escenarios pasan (ambiguous)                                                                   |       0       |    7    |
+|                                      | US-04 — 0/2 escenarios pasan (ambiguous)                                                                   |       0       |    7    |
+|                                      | US-05 — 0/4 escenarios pasan (ambiguous)                                                                   |       0       |    7    |
+| **C. Contrato Pact**                 | Consumer — test falla, no genera `pacts/*.json`                                                            |       0       |   10    |
+|                                      | Provider — no existe archivo de verificación                                                               |       0       |   10    |
+| **D. Calidad**                       | Lint — 0 errores (14 warnings)                                                                             |       7       |    7    |
+|                                      | TypeScript — `tsc --noEmit` sin errores                                                                    |       6       |    6    |
+|                                      | Coverage — 36.7% líneas (< 70%)                                                                            |       0       |    7    |
+| **TOTAL**                            |                                                                                                            |    **15**     | **100** |
 
 **Nota:** (15/100)
 
 ---
+
 ---
 
 # Feedback para el equipo — Cómo corregir cada problema
@@ -100,6 +102,7 @@ mv apps/api/tests/task.integration.test.ts    apps/api/tests/integration/
 ```
 
 Luego verificar que corran:
+
 ```bash
 npm run test:integration
 ```
@@ -119,6 +122,7 @@ await request(app).post(`/projects/${projectId}/tasks`).send(...)
 ```
 
 Mirando `app.ts`, las rutas están registradas así:
+
 ```typescript
 app.use('/api/auth', authRoutes)
 app.use('/api/projects', projectRoutes)
@@ -143,7 +147,7 @@ El mismo problema existe en `tasks.routes.spec.ts` línea 79 — el test "400 �
 **Qué pasó:** El test de aislamiento de usuarios dice:
 
 ```typescript
-expect(list.body.projects).toBeUndefined();
+expect(list.body.projects).toBeUndefined()
 ```
 
 Esta assertion siempre pasa porque la ruta devuelve un array directo (`res.json(projects)`), entonces `list.body` es `[]` y `list.body.projects` es siempre `undefined`. No verifica aislamiento.
@@ -153,24 +157,27 @@ Esta assertion siempre pasa porque la ruta devuelve un array directo (`res.json(
 ```typescript
 it('solo devuelve los proyectos del usuario autenticado (@US-04)', async () => {
   // Crear proyecto del primer usuario
-  await request(app).post('/api/projects')
+  await request(app)
+    .post('/api/projects')
     .set('Authorization', `Bearer ${token}`)
-    .send({ name: 'Proyecto de tester1' });
+    .send({ name: 'Proyecto de tester1' })
 
   // Registrar segundo usuario
-  const res2 = await request(app).post('/api/auth/register')
-    .send({ email: 'otro@test.com', password: 'Test1234!' });
-  const token2 = res2.body.token;
+  const res2 = await request(app)
+    .post('/api/auth/register')
+    .send({ email: 'otro@test.com', password: 'Test1234!' })
+  const token2 = res2.body.token
 
   // El segundo usuario lista SUS proyectos
-  const list = await request(app).get('/api/projects')
-    .set('Authorization', `Bearer ${token2}`);
+  const list = await request(app)
+    .get('/api/projects')
+    .set('Authorization', `Bearer ${token2}`)
 
-  expect(list.status).toBe(200);
+  expect(list.status).toBe(200)
   // ✅ el usuario 2 no tiene proyectos propios → lista vacía
-  expect(Array.isArray(list.body)).toBe(true);
-  expect(list.body).toHaveLength(0);
-});
+  expect(Array.isArray(list.body)).toBe(true)
+  expect(list.body).toHaveLength(0)
+})
 ```
 
 ---
@@ -191,7 +198,7 @@ expect(res.body.title).toBe('Implementar Login')
 ```typescript
 expect(res.status).toBe(201)
 expect(res.body.id).toBeDefined()
-expect(res.body.priority).toBe('HIGH')   // ← agregar esto
+expect(res.body.priority).toBe('HIGH') // ← agregar esto
 ```
 
 ---
@@ -211,21 +218,21 @@ Cucumber no sabe cuál usar y falla con `Multiple step definitions match` en los
 
 ```javascript
 // features/step_definitions/shared.steps.js  ← NUEVO archivo
-const { Then } = require('@cucumber/cucumber');
-const { expect } = require('chai');
+const { Then } = require('@cucumber/cucumber')
+const { expect } = require('chai')
 
 Then('la respuesta tiene código de estado {int}', function (expectedStatus) {
-  expect(this.response).to.not.be.null;
-  expect(this.response.status).to.equal(expectedStatus);
-});
+  expect(this.response).to.not.be.null
+  expect(this.response.status).to.equal(expectedStatus)
+})
 
 Then('el cuerpo contiene el campo {string}', function (field) {
-  expect(this.response.data).to.have.property(field);
-});
+  expect(this.response.data).to.have.property(field)
+})
 
 Then('el cuerpo contiene {string} con valor {string}', function (field, value) {
-  expect(String(this.response.data[field])).to.equal(value);
-});
+  expect(String(this.response.data[field])).to.equal(value)
+})
 ```
 
 Para que `this.response` sea accesible desde todos los steps, guardar la respuesta en `this` (el World object de Cucumber) en lugar de una variable de módulo:
@@ -233,10 +240,10 @@ Para que `this.response` sea accesible desde todos los steps, guardar la respues
 ```javascript
 // En auth.steps.js, projects.steps.js y tasks.steps.js:
 When('el usuario envía los datos de registro:', async function (dataTable) {
-  const data = dataTable.rowsHash();
-  this.response = { status: 201, data: { id: 'test-id', email: data.email } };
+  const data = dataTable.rowsHash()
+  this.response = { status: 201, data: { id: 'test-id', email: data.email } }
   //  ^^^^ guardar en this, no en variable local del módulo
-});
+})
 ```
 
 Luego, eliminar las definiciones duplicadas de `la respuesta tiene código de estado` y `el cuerpo contiene` de `auth.steps.js`, `projects.steps.js` y `tasks.steps.js`.
@@ -246,6 +253,7 @@ Luego, eliminar las definiciones duplicadas de `la respuesta tiene código de es
 ## Problema 6 — BDD: el script `test:bdd` apunta al lugar equivocado
 
 **Qué pasó:** El `package.json` raíz tiene:
+
 ```json
 "test:bdd": "npm run test:bdd --workspace=apps/api"
 ```
@@ -266,8 +274,8 @@ module.exports = {
     paths: ['../../taskflow-bdd/features/**/*.feature'],
     require: ['../../taskflow-bdd/features/step_definitions/**/*.js'],
     format: ['progress'],
-  }
-};
+  },
+}
 ```
 
 ---
@@ -279,9 +287,9 @@ module.exports = {
 ```javascript
 // ❌ stub — siempre devuelve 201 sin importar el input
 When('el usuario envía los datos de registro:', async function (dataTable) {
-  const data = dataTable.rowsHash();
-  response = { status: 201, data: { id: 'test-id', email: data.email } };
-});
+  const data = dataTable.rowsHash()
+  response = { status: 201, data: { id: 'test-id', email: data.email } }
+})
 ```
 
 Esto hace que los escenarios de error (email duplicado → 409, contraseña corta → 400) fallen aunque el servidor funcione correctamente.
@@ -290,14 +298,14 @@ Esto hace que los escenarios de error (email duplicado → 409, contraseña cort
 
 ```javascript
 When('el usuario envía los datos de registro:', async function (dataTable) {
-  const data = dataTable.rowsHash();
+  const data = dataTable.rowsHash()
   // ✅ llamada real al servidor
   this.response = await api.post('/api/auth/register', {
     email: data.email,
     password: data.password,
     name: data.name,
-  });
-});
+  })
+})
 ```
 
 Para los steps de Given que limpian la base de datos o crean precondiciones, la opción más simple es agregar un endpoint de reset solo disponible en entorno de test:
@@ -315,10 +323,11 @@ if (process.env.NODE_ENV === 'test') {
 ```
 
 Y en el step:
+
 ```javascript
 Given('la base de datos está limpia', async function () {
-  await api.post('/test/reset');
-});
+  await api.post('/test/reset')
+})
 ```
 
 ---
@@ -335,24 +344,26 @@ import { defineConfig } from 'vitest/config'
 
 export default defineConfig({
   test: {
-    environment: 'node',   // ← clave: no jsdom
+    environment: 'node', // ← clave: no jsdom
     include: ['tests/pact/**/*.test.ts'],
   },
 })
 ```
 
 También crear la carpeta de salida antes de correr el test:
+
 ```bash
 mkdir -p pacts
 ```
 
 Y verificar que el path en el test sea correcto:
+
 ```typescript
 const provider = new PactV4({
   consumer: 'taskflow-frontend',
   provider: 'taskflow-api',
-  dir: path.resolve(__dirname, '../../../../pacts'),  // relativo a apps/web/tests/pact/
-});
+  dir: path.resolve(__dirname, '../../../../pacts'), // relativo a apps/web/tests/pact/
+})
 ```
 
 ---
@@ -375,14 +386,17 @@ describe('Pact Provider Verification', () => {
   it('verifica el contrato contra taskflow-frontend', async () => {
     const app = createApp()
     const server = http.createServer(app)
-    await new Promise<void>(resolve => server.listen(0, resolve))
+    await new Promise<void>((resolve) => server.listen(0, resolve))
     const port = (server.address() as any).port
 
     await new Verifier({
       provider: 'taskflow-api',
       providerBaseUrl: `http://localhost:${port}`,
       pactUrls: [
-        path.resolve(__dirname, '../../../../pacts/taskflow-frontend-taskflow-api.json')
+        path.resolve(
+          __dirname,
+          '../../../../pacts/taskflow-frontend-taskflow-api.json'
+        ),
       ],
       stateHandlers: {
         'usuario autenticado con token válido': async () => {
@@ -392,7 +406,7 @@ describe('Pact Provider Verification', () => {
       },
     }).verifyProvider()
 
-    await new Promise<void>(resolve => server.close(() => resolve()))
+    await new Promise<void>((resolve) => server.close(() => resolve()))
   })
 })
 ```
@@ -435,7 +449,9 @@ describe('ProjectService', () => {
   it('createProject: crea y devuelve el proyecto', async () => {
     mockPrisma.project.findFirst.mockResolvedValue(null)
     mockPrisma.project.create.mockResolvedValue({
-      id: 'proj-1', name: 'Test', ownerId: 'user-1'
+      id: 'proj-1',
+      name: 'Test',
+      ownerId: 'user-1',
     })
     const result = await service.createProject('user-1', { name: 'Test' })
     expect(result.id).toBe('proj-1')
@@ -453,6 +469,7 @@ describe('ProjectService', () => {
 **Cómo arreglarlo — Opción B (incluir coverage en los integration tests):**
 
 Cambiar en `apps/api/package.json`:
+
 ```json
 "test:integration": "vitest run tests/integration --coverage"
 ```
@@ -463,12 +480,12 @@ Con los integration tests bien implementados (llamando la API real), la cobertur
 
 ## Resumen de prioridades
 
-| Prioridad | Problema | Impacto en nota |
-|-----------|----------|:---:|
-| 🔴 Alta | BDD: extraer step definitions duplicadas a `shared.steps.js` | +35 pts potenciales |
-| 🔴 Alta | Integration: mover tests a `tests/integration/` y agregar prefijo `/api/` | +17 pts |
-| 🟡 Media | BDD: implementar steps reales (descomentar llamadas a la API) | necesario para escenarios de error |
-| 🟡 Media | Pact consumer: agregar `vitest.config.ts` con `environment: 'node'` | +10 pts |
-| 🟡 Media | Pact provider: crear test de verificación | +10 pts |
-| 🟢 Baja | Coverage: agregar unit tests para `ProjectService` y `CommentService` | +7 pts |
-| 🟢 Baja | US-04 assertion: verificar aislamiento real con `toHaveLength(0)` | +6 pts |
+| Prioridad | Problema                                                                  |          Impacto en nota           |
+| --------- | ------------------------------------------------------------------------- | :--------------------------------: |
+| 🔴 Alta   | BDD: extraer step definitions duplicadas a `shared.steps.js`              |        +35 pts potenciales         |
+| 🔴 Alta   | Integration: mover tests a `tests/integration/` y agregar prefijo `/api/` |              +17 pts               |
+| 🟡 Media  | BDD: implementar steps reales (descomentar llamadas a la API)             | necesario para escenarios de error |
+| 🟡 Media  | Pact consumer: agregar `vitest.config.ts` con `environment: 'node'`       |              +10 pts               |
+| 🟡 Media  | Pact provider: crear test de verificación                                 |              +10 pts               |
+| 🟢 Baja   | Coverage: agregar unit tests para `ProjectService` y `CommentService`     |               +7 pts               |
+| 🟢 Baja   | US-04 assertion: verificar aislamiento real con `toHaveLength(0)`         |               +6 pts               |

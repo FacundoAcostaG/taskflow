@@ -1,5 +1,13 @@
 // tests/unit/task.state-machine.spec.ts
 import { describe, it, expect, vi, beforeEach } from 'vitest'
+import {
+  description,
+  feature,
+  link,
+  severity,
+  step,
+  story,
+} from 'allure-vitest'
 import { Status } from '../../src/prisma/enums'
 import { TaskService } from '../../src/services/task.service'
 import { UnprocessableError } from '../../src/services/auth.service'
@@ -33,8 +41,8 @@ const taskService = new TaskService(mockDb as any)
 // US-06: Máquina de estados
 // ════════════════════════════════════════════════════════════════
 describe('TaskService — máquina de estados (US-06)', () => {
-
   beforeEach(() => {
+    vi.clearAllMocks()
     mockDb.statusHistory.create.mockResolvedValue({})
     mockDb.task.update.mockResolvedValue({ id: 'task-1' })
   })
@@ -44,7 +52,9 @@ describe('TaskService — máquina de estados (US-06)', () => {
       mockDb.task.findUnique.mockResolvedValue(makeTask(Status.TODO))
 
       await expect(
-        taskService.updateTask('task-1', 'user-1', { status: Status.IN_PROGRESS })
+        taskService.updateTask('task-1', 'user-1', {
+          status: Status.IN_PROGRESS,
+        })
       ).resolves.toBeDefined()
     })
 
@@ -63,16 +73,35 @@ describe('TaskService — máquina de estados (US-06)', () => {
         taskService.updateTask('task-1', 'user-1', { status: Status.TODO })
       ).resolves.toBeDefined()
     })
-
   })
 
   describe('Transiciones INVÁLIDAS', () => {
-    it('TODO → DONE ✗ (saltar IN_PROGRESS)', async () => {
+    it('TODO → DONE ✗ (saltar IN_PROGRESS)', async (context) => {
+      await feature(context, 'Tareas')
+      await story(context, 'US-06')
+      await severity(context, 'normal')
+      await link(
+        context,
+        'custom',
+        'https://github.com/FacundoAcostaG/taskflow/blob/main/apps/api/src/services/task.service.ts',
+        'TaskService.updateTask'
+      )
+      await description(
+        context,
+        'Verifica que la máquina de estados impide cerrar una tarea sin pasar antes por IN_PROGRESS.'
+      )
+
       mockDb.task.findUnique.mockResolvedValue(makeTask(Status.TODO))
 
-      await expect(
-        taskService.updateTask('task-1', 'user-1', { status: Status.DONE })
-      ).rejects.toThrow(UnprocessableError)
+      await step(
+        context,
+        'Intentar una transición directa de TODO a DONE',
+        async () => {
+          await expect(
+            taskService.updateTask('task-1', 'user-1', { status: Status.DONE })
+          ).rejects.toThrow(UnprocessableError)
+        }
+      )
     })
 
     it('TODO → DONE: mensaje de error describe la transición', async () => {
@@ -98,7 +127,9 @@ describe('TaskService — máquina de estados (US-06)', () => {
       mockDb.task.findUnique.mockResolvedValue(makeTask(Status.DONE))
 
       await expect(
-        taskService.updateTask('task-1', 'user-1', { status: Status.IN_PROGRESS })
+        taskService.updateTask('task-1', 'user-1', {
+          status: Status.IN_PROGRESS,
+        })
       ).rejects.toThrow(UnprocessableError)
     })
 
@@ -115,7 +146,9 @@ describe('TaskService — máquina de estados (US-06)', () => {
     it('registra la transición en statusHistory', async () => {
       mockDb.task.findUnique.mockResolvedValue(makeTask(Status.TODO))
 
-      await taskService.updateTask('task-1', 'user-1', { status: Status.IN_PROGRESS })
+      await taskService.updateTask('task-1', 'user-1', {
+        status: Status.IN_PROGRESS,
+      })
 
       expect(mockDb.statusHistory.create).toHaveBeenCalledWith({
         data: expect.objectContaining({
@@ -130,7 +163,9 @@ describe('TaskService — máquina de estados (US-06)', () => {
     it('no registra historial si el estado no cambia', async () => {
       mockDb.task.findUnique.mockResolvedValue(makeTask(Status.TODO))
 
-      await taskService.updateTask('task-1', 'user-1', { title: 'Nuevo título' })
+      await taskService.updateTask('task-1', 'user-1', {
+        title: 'Nuevo título',
+      })
 
       expect(mockDb.statusHistory.create).not.toHaveBeenCalled()
     })

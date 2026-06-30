@@ -13,15 +13,18 @@ env:
 jobs:
   # ── 1. Lint ──────────────────────────────────────────────────
   lint:
-    name: 🔍 Lint & Type Check
+    name: 🔍 Lint, Format & Type Check
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
       - uses: actions/setup-node@v4
         with:
           node-version: ${{ env.NODE_VERSION }}
-          cache: 'npm'
       - run: npm ci
+      - name: Check formatting
+        run: npm run format:check
+      - name: Install Rollup native binary for Linux
+        run: npm install --no-save @rollup/rollup-linux-x64-gnu@4.59.0
       - name: Generate Prisma client
         run: npx prisma generate
         working-directory: apps/api
@@ -39,8 +42,9 @@ jobs:
       - uses: actions/setup-node@v4
         with:
           node-version: ${{ env.NODE_VERSION }}
-          cache: 'npm'
       - run: npm ci
+      - name: Install Rollup native binary for Linux
+        run: npm install --no-save @rollup/rollup-linux-x64-gnu@4.59.0
       - name: Run unit tests with coverage
         run: npm run test:unit
         working-directory: apps/api
@@ -76,8 +80,9 @@ jobs:
       - uses: actions/setup-node@v4
         with:
           node-version: ${{ env.NODE_VERSION }}
-          cache: 'npm'
       - run: npm ci
+      - name: Install Rollup native binary for Linux
+        run: npm install --no-save @rollup/rollup-linux-x64-gnu@4.59.0
       - name: Run Prisma migrations
         run: npx prisma migrate deploy
         working-directory: apps/api
@@ -112,8 +117,9 @@ jobs:
       - uses: actions/setup-node@v4
         with:
           node-version: ${{ env.NODE_VERSION }}
-          cache: 'npm'
       - run: npm ci
+      - name: Install Rollup native binary for Linux
+        run: npm install --no-save @rollup/rollup-linux-x64-gnu@4.59.0
       - run: npx prisma migrate deploy
         working-directory: apps/api
       - name: Run BDD scenarios
@@ -148,9 +154,10 @@ jobs:
       - uses: actions/setup-node@v4
         with:
           node-version: ${{ env.NODE_VERSION }}
-          cache: 'npm'
       - run: npm ci
-      - run: npx playwright install --with-deps chromium
+      - name: Install Rollup native binary for Linux
+        run: npm install --no-save @rollup/rollup-linux-x64-gnu@4.59.0
+      - run: npx playwright install --with-deps chromium webkit
       - run: npx prisma migrate deploy && npx prisma db seed
         working-directory: apps/api
       - name: Run E2E tests

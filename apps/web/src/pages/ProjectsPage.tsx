@@ -41,7 +41,7 @@ export default function ProjectsPage() {
         <button
           data-testid="create-project-btn"
           onClick={() => setShowForm((v) => !v)}
-          className="bg-teal-600 text-white text-sm px-4 py-2 rounded-lg hover:bg-teal-700"
+          className="bg-teal-700 text-white text-sm px-4 py-2 rounded-lg hover:bg-teal-800 focus:outline-none focus:ring-2 focus:ring-teal-500 focus:ring-offset-2"
         >
           + Nuevo proyecto
         </button>
@@ -74,7 +74,7 @@ export default function ProjectsPage() {
             <button
               data-testid="project-submit"
               type="submit"
-              className="bg-teal-600 text-white text-sm px-4 py-2 rounded-lg hover:bg-teal-700"
+              className="bg-teal-700 text-white text-sm px-4 py-2 rounded-lg hover:bg-teal-800 focus:outline-none focus:ring-2 focus:ring-teal-500 focus:ring-offset-2"
             >
               Crear
             </button>
@@ -99,12 +99,16 @@ export default function ProjectsPage() {
           >
             <h2 className="font-semibold text-gray-900">{project.name}</h2>
             {project.description && (
-              <p className="text-sm text-gray-500 mt-1">{project.description}</p>
+              <p className="text-sm text-gray-500 mt-1">
+                {project.description}
+              </p>
             )}
           </li>
         ))}
         {projects.length === 0 && (
-          <p className="text-gray-500 text-sm col-span-2">No tenés proyectos todavía.</p>
+          <p className="text-gray-500 text-sm col-span-2">
+            No tenés proyectos todavía.
+          </p>
         )}
       </ul>
     </main>

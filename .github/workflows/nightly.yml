@@ -2,8 +2,8 @@ name: Nightly — Performance Tests
 
 on:
   schedule:
-    - cron: '0 2 * * *'  # 2am UTC todos los días
-  workflow_dispatch:      # también manual
+    - cron: '0 2 * * *' # 2am UTC todos los días
+  workflow_dispatch: # también manual
 
 jobs:
   performance:

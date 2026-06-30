@@ -6,9 +6,9 @@ const axios = require('axios');
 const BASE_URL = process.env.TASKFLOW_URL || 'http://localhost:3001';
 const api = axios.create({ baseURL: BASE_URL, validateStatus: () => true });
 
-let response = null;
-let currentUser = null;
-let currentProject = null;
+let response = null
+let currentUser = null
+let currentProject = null
 
 Given('existe un usuario autenticado con email {string}', async function (email) {
   // registrar usuario y obtener token

@@ -13,7 +13,7 @@ npx cucumber-js
 ```
 features/
 ├── auth.feature          EP-01: Autenticación
-├── projects.feature      EP-02: Proyectos y Tablero  
+├── projects.feature      EP-02: Proyectos y Tablero
 ├── tasks.feature         EP-03: Gestión de Tareas
 └── step_definitions/
     ├── auth.steps.js     Steps implementados (funcionales con stubs)
@@ -23,11 +23,11 @@ features/
 
 ## Estados de los escenarios
 
-| Color | Estado | Qué significa |
-|-------|--------|---------------|
-| 🟡 Amarillo | pending | Step definido pero sin implementar |
-| 🔴 Rojo | failing | Step implementado pero el assert falla |
-| 🟢 Verde | passing | Escenario completo y pasando |
+| Color       | Estado  | Qué significa                          |
+| ----------- | ------- | -------------------------------------- |
+| 🟡 Amarillo | pending | Step definido pero sin implementar     |
+| 🔴 Rojo     | failing | Step implementado pero el assert falla |
+| 🟢 Verde    | passing | Escenario completo y pasando           |
 
 ## Comandos útiles
 

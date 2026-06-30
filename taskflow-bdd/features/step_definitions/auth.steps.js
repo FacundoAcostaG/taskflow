@@ -1,7 +1,7 @@
 // features/step_definitions/auth.steps.js
-const { Given, When, Then, Before, After } = require('@cucumber/cucumber');
-const { expect } = require('chai');
-const axios = require('axios');
+const { Given, When, Then, Before, After } = require('@cucumber/cucumber')
+const { expect } = require('chai')
+const axios = require('axios')
 
 // ──────────────────────────────────────────────
 // CONFIGURACIÓN
@@ -15,7 +15,7 @@ const api = axios.create({ baseURL: BASE_URL, validateStatus: () => true });
 // Cucumber.js inyecta "this" como el World object en cada step
 // Usamos variables locales al scenario para almacenar estado
 
-let response = null;
+let response = null
 
 // ──────────────────────────────────────────────
 // STEPS: GIVEN
@@ -73,7 +73,7 @@ When('el usuario envía los datos de registro:', async function (dataTable) {
 });
 
 When('el usuario envía las credenciales:', async function (dataTable) {
-  const data = dataTable.rowsHash();
+  const data = dataTable.rowsHash()
 
   // descomentar cuando el servidor esté corriendo
   this.response = await api.post('/api/auth/login', {
