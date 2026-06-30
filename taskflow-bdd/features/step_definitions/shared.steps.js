@@ -1,27 +1,23 @@
-const { Given, When, Then, Before, After } = require('@cucumber/cucumber');
-const { expect } = require('chai');
-const axios = require('axios');
+const { Then } = require('@cucumber/cucumber')
+const { assert } = require('../support/api')
 
-const BASE_URL = process.env.TASKFLOW_URL || 'http://localhost:3001';
-const api = axios.create({ baseURL: BASE_URL, validateStatus: () => true });
-
-let response = null;
-let currentUser = null;
-let currentProject = null;
-let currentTask = null;
-
-Then('la respuesta tiene código de estado {int}', function (expectedStatus) {
-  expect(this.response).to.not.be.null;
-  expect(this.response.status).to.equal(expectedStatus,
-    `Se esperaba status ${expectedStatus} pero se recibió ${this.response.status}`
-  );
-});
+Then('la respuesta tiene codigo de estado {int}', function (expectedStatus) {
+  assert.ok(
+    this.response,
+    'No se encontro respuesta en el contexto del escenario'
+  )
+  assert.equal(this.response.status, expectedStatus)
+})
 
 Then('el cuerpo contiene el campo {string}', function (field) {
-  expect(this.response.data).to.have.property(field);
-});
+  assert.ok(this.response.data)
+  assert.ok(
+    Object.prototype.hasOwnProperty.call(this.response.data, field),
+    `No se encontro el campo ${field} en la respuesta`
+  )
+})
 
 Then('el cuerpo contiene {string} con valor {string}', function (field, value) {
-  expect(this.response.data).to.have.property(field);
-  expect(String(this.response.data[field])).to.equal(value);
-});
+  assert.ok(this.response.data)
+  assert.equal(String(this.response.data[field]), value)
+})

@@ -14,7 +14,7 @@
     "test:bdd": "cucumber-js",
     "test": "dotenv -e .env.test --override -- vitest run",
     "test:watch": "dotenv -e .env.test --override -- vitest",
-    "test:pact": "vitest run tests/pact",
+    "test:pact": "dotenv -e .env.test --override -- vitest run tests/pact",
     "db:migrate:test": "dotenv -e .env.test --override -- prisma migrate deploy --schema=src/prisma/schema.prisma"
   },
   "dependencies": {

@@ -10,7 +10,9 @@ router.post('/reset', async (req: any, res, next) => {
   try {
     const task = await testService.deleteAllData()
     res.json(task)
-  } catch (err) { next(err) }
+  } catch (err) {
+    next(err)
+  }
 })
 
 export default router

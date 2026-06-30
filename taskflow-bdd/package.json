@@ -1,17 +1,15 @@
 {
   "name": "taskflow-bdd",
   "version": "1.0.0",
-  "description": "BDD tests para TaskFlow - Clase 2",
+  "description": "BDD tests para TaskFlow",
   "scripts": {
-    "test": "cucumber-js",
-    "test:auth": "cucumber-js features/auth.feature",
-    "test:projects": "cucumber-js features/projects.feature",
-    "test:tasks": "cucumber-js features/tasks.feature"
+    "test": "cucumber-js features --require features/step_definitions/**/*.js --format progress --format html:cucumber-report.html --parallel 0",
+    "test:auth": "cucumber-js features/auth.feature --require features/step_definitions/**/*.js --format progress --parallel 0",
+    "test:projects": "cucumber-js features/projects.feature --require features/step_definitions/**/*.js --format progress --parallel 0",
+    "test:tasks": "cucumber-js features/tasks.feature --require features/step_definitions/**/*.js --format progress --parallel 0"
   },
   "dependencies": {},
   "devDependencies": {
-    "@cucumber/cucumber": "^10.0.0",
-    "chai": "^4.3.0",
-    "axios": "^1.6.0"
+    "@cucumber/cucumber": "^10.0.0"
   }
 }

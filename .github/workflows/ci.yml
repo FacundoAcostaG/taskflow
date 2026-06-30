@@ -112,6 +112,7 @@ jobs:
     env:
       DATABASE_URL: postgresql://taskflow:testpassword@localhost:5432/taskflow_bdd
       JWT_SECRET: test-secret-for-ci
+      NODE_ENV: test
     steps:
       - uses: actions/checkout@v4
       - uses: actions/setup-node@v4
@@ -120,11 +121,35 @@ jobs:
       - run: npm ci
       - name: Install Rollup native binary for Linux
         run: npm install --no-save @rollup/rollup-linux-x64-gnu@4.59.0
-      - run: npx prisma migrate deploy
+      - name: Run Prisma migrations
+        run: npx prisma migrate deploy
         working-directory: apps/api
+      - name: Build API
+        run: npm run build
+        working-directory: apps/api
+      - name: Start API
+        run: npm run start > api.log 2>&1 &
+        working-directory: apps/api
+      - name: Wait for API healthcheck
+        run: |
+          for i in {1..30}; do
+            if curl -fsS http://127.0.0.1:3001/health > /dev/null; then
+              exit 0
+            fi
+            sleep 2
+          done
+          echo "API did not become healthy in time"
+          cat apps/api/api.log || true
+          exit 1
       - name: Run BDD scenarios
         run: npm run test:bdd
-        working-directory: apps/api
+      - name: Upload API log
+        uses: actions/upload-artifact@v4
+        if: failure()
+        with:
+          name: bdd-api-log-${{ github.run_id }}
+          path: apps/api/api.log
+          retention-days: 7
 
   # ── 5. E2E Tests (solo en PR a main) ─────────────────────────
   e2e-tests:
