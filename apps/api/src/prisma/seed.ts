@@ -2,11 +2,12 @@ import { PrismaClient } from '@prisma/client'
 import bcrypt from 'bcryptjs'
 
 const prisma = new PrismaClient()
+const log = (message: string) => process.stdout.write(`${message}\n`)
 
 async function main() {
-  console.log('🌱 Seeding database...')
+  log('Seeding database...')
 
-  // ── Usuarios ──────────────────────────────────────────────
+  // Users
   const passwordHash = await bcrypt.hash('Password1', 10)
 
   const alice = await prisma.user.upsert({
@@ -21,16 +22,16 @@ async function main() {
     create: { email: 'bob@taskflow.dev', name: 'Bob', passwordHash },
   })
 
-  // Usuario de tests E2E (referenciado en la CI)
+  // E2E seed user referenced by CI tests
   const seed = await prisma.user.upsert({
     where: { email: 'seed@test.com' },
     update: {},
     create: { email: 'seed@test.com', name: 'Seed User', passwordHash },
   })
 
-  console.log(`  ✓ Usuarios: ${alice.email}, ${bob.email}, ${seed.email}`)
+  log(`  OK Users: ${alice.email}, ${bob.email}, ${seed.email}`)
 
-  // ── Proyecto principal (Alice) ─────────────────────────────
+  // Main project owned by Alice
   const project = await prisma.project.upsert({
     where: { ownerId_name: { ownerId: alice.id, name: 'TaskFlow App' } },
     update: {},
@@ -47,7 +48,7 @@ async function main() {
     },
   })
 
-  // Proyecto E2E (referenciado en tests)
+  // E2E project referenced by tests
   const seedProject = await prisma.project.upsert({
     where: { ownerId_name: { ownerId: seed.id, name: 'seed-project' } },
     update: {},
@@ -59,14 +60,14 @@ async function main() {
     },
   })
 
-  console.log(`  ✓ Proyectos: "${project.name}", "${seedProject.name}"`)
+  log(`  OK Projects: "${project.name}", "${seedProject.name}"`)
 
-  // ── Tareas ─────────────────────────────────────────────────
+  // Tasks
   const tasks = await Promise.all([
     prisma.task.create({
       data: {
         title: 'Configurar CI/CD',
-        description: 'GitHub Actions para lint, tests y deploy automático.',
+        description: 'GitHub Actions para lint, tests y deploy automatico.',
         status: 'DONE',
         priority: 'HIGH',
         projectId: project.id,
@@ -75,8 +76,8 @@ async function main() {
     }),
     prisma.task.create({
       data: {
-        title: 'Implementar autenticación JWT',
-        description: 'Registro, login y middleware de autorización.',
+        title: 'Implementar autenticacion JWT',
+        description: 'Registro, login y middleware de autorizacion.',
         status: 'DONE',
         priority: 'CRITICAL',
         projectId: project.id,
@@ -86,7 +87,7 @@ async function main() {
     prisma.task.create({
       data: {
         title: 'Agregar filtros de tareas',
-        description: 'Filtrar por status, prioridad y búsqueda full-text.',
+        description: 'Filtrar por status, prioridad y busqueda full-text.',
         status: 'IN_PROGRESS',
         priority: 'MEDIUM',
         projectId: project.id,
@@ -96,7 +97,7 @@ async function main() {
     prisma.task.create({
       data: {
         title: 'Escribir tests E2E con Playwright',
-        description: 'Cubrir flujos de registro, login y gestión de tareas.',
+        description: 'Cubrir flujos de registro, login y gestion de tareas.',
         status: 'IN_PROGRESS',
         priority: 'HIGH',
         projectId: project.id,
@@ -128,44 +129,44 @@ async function main() {
     }),
   ])
 
-  console.log(`  ✓ Tareas: ${tasks.length} creadas`)
+  log(`  OK Tasks: ${tasks.length} created`)
 
-  // ── Comentarios ────────────────────────────────────────────
-  const taskInProgress = tasks[2] // "Agregar filtros"
+  // Comments
+  const taskInProgress = tasks[2]
 
   await prisma.comment.createMany({
     data: [
       {
-        body: 'Empecé con el filtro por status, funciona bien.',
+        body: 'Empece con el filtro por status, funciona bien.',
         taskId: taskInProgress.id,
         authorId: bob.id,
       },
       {
-        body: 'Falta implementar el full-text search, lo hago mañana.',
+        body: 'Falta implementar el full-text search, lo hago manana.',
         taskId: taskInProgress.id,
         authorId: bob.id,
       },
       {
-        body: 'Revisé el código, se ve bien. Acordate de agregar el test de integración.',
+        body: 'Revise el codigo, se ve bien. Acordate de agregar el test de integracion.',
         taskId: taskInProgress.id,
         authorId: alice.id,
       },
     ],
   })
 
-  console.log('  ✓ Comentarios creados')
-  console.log('')
-  console.log('✅ Seed completo.')
-  console.log('')
-  console.log('   Usuarios de prueba (contraseña: Password1)')
-  console.log('   → alice@taskflow.dev')
-  console.log('   → bob@taskflow.dev')
-  console.log('   → seed@test.com')
+  log('  OK Comments created')
+  log('')
+  log('Seed complete.')
+  log('')
+  log('  Test users (password: Password1)')
+  log('  -> alice@taskflow.dev')
+  log('  -> bob@taskflow.dev')
+  log('  -> seed@test.com')
 }
 
 main()
-  .catch((e) => {
-    console.error(e)
+  .catch((error) => {
+    console.error(error)
     process.exit(1)
   })
   .finally(() => prisma.$disconnect())

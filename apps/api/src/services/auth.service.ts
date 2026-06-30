@@ -1,6 +1,6 @@
+import { PrismaClient } from '@prisma/client'
 import bcrypt from 'bcryptjs'
 import jwt from 'jsonwebtoken'
-import { PrismaClient } from '@prisma/client'
 import { z } from 'zod'
 
 const JWT_SECRET = process.env.JWT_SECRET ?? 'dev-secret-change-in-production'
@@ -51,9 +51,6 @@ export class AuthService {
     })
 
     const token = this.generateToken(user.id)
-    console.log(
-      `  ***********************→ Usuario ${user.email} registrado con token: ${token}`
-    )
     return { user, token }
   }
 
@@ -127,9 +124,10 @@ export class AuthService {
   }
 }
 
-// ── Custom errors ───────────────────────────────────────────────
+// Custom errors
 export class ConflictError extends Error {
   readonly statusCode = 409
+
   constructor(message: string) {
     super(message)
     this.name = 'ConflictError'
@@ -138,6 +136,7 @@ export class ConflictError extends Error {
 
 export class UnauthorizedError extends Error {
   readonly statusCode = 401
+
   constructor(message: string) {
     super(message)
     this.name = 'UnauthorizedError'
@@ -146,6 +145,7 @@ export class UnauthorizedError extends Error {
 
 export class ValidationError extends Error {
   readonly statusCode = 400
+
   constructor(message: string) {
     super(message)
     this.name = 'ValidationError'
@@ -154,6 +154,7 @@ export class ValidationError extends Error {
 
 export class NotFoundError extends Error {
   readonly statusCode = 404
+
   constructor(message: string) {
     super(message)
     this.name = 'NotFoundError'
@@ -162,6 +163,7 @@ export class NotFoundError extends Error {
 
 export class ForbiddenError extends Error {
   readonly statusCode = 403
+
   constructor(message: string) {
     super(message)
     this.name = 'ForbiddenError'
@@ -170,6 +172,7 @@ export class ForbiddenError extends Error {
 
 export class UnprocessableError extends Error {
   readonly statusCode = 422
+
   constructor(message: string) {
     super(message)
     this.name = 'UnprocessableError'
