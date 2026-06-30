@@ -49,7 +49,7 @@ jobs:
         run: npm run test:unit
         working-directory: apps/api
       - name: Upload coverage report
-        uses: codecov/codecov-action@v5
+        uses: codecov/codecov-action@v7
         with:
           token: ${{ secrets.CODECOV_TOKEN }}
 
