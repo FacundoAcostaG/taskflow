@@ -211,7 +211,8 @@ jobs:
         run: npm run build
         working-directory: apps/api
       - name: Start API
-        run: npm run start --workspace=apps/api > api.log 2>&1 &
+        run: npm run start > api.log 2>&1 &
+        working-directory: apps/api
       - name: Wait for API healthcheck
         run: |
           for i in {1..30}; do
@@ -221,7 +222,7 @@ jobs:
             sleep 2
           done
           echo "API did not become healthy in time"
-          cat api.log || true
+          cat apps/api/api.log || true
           exit 1
       - name: Run performance tests
         run: k6 run performance/scenarios/api-load.k6.js
@@ -232,5 +233,5 @@ jobs:
         if: failure()
         with:
           name: performance-api-log-${{ github.run_id }}
-          path: api.log
+          path: apps/api/api.log
           retention-days: 7
