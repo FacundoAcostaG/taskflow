@@ -7,3 +7,4 @@ test-results/
 *.log
 .DS_Store
 .claude/
+/taskflow-bdd/cucumber-report.html
