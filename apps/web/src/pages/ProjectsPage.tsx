@@ -99,12 +99,16 @@ export default function ProjectsPage() {
           >
             <h2 className="font-semibold text-gray-900">{project.name}</h2>
             {project.description && (
-              <p className="text-sm text-gray-500 mt-1">{project.description}</p>
+              <p className="text-sm text-gray-500 mt-1">
+                {project.description}
+              </p>
             )}
           </li>
         ))}
         {projects.length === 0 && (
-          <p className="text-gray-500 text-sm col-span-2">No tenés proyectos todavía.</p>
+          <p className="text-gray-500 text-sm col-span-2">
+            No tenés proyectos todavía.
+          </p>
         )}
       </ul>
     </main>

@@ -8,10 +8,10 @@ export async function createProject(
     method: 'POST',
     headers: {
       'Content-Type': 'application/json',
-      'Authorization': `Bearer ${token}`,
+      Authorization: `Bearer ${token}`,
     },
     body: JSON.stringify({ name, description }),
-  });
-  if (!res.ok) throw new Error(`Error ${res.status}`);
-  return res.json();
+  })
+  if (!res.ok) throw new Error(`Error ${res.status}`)
+  return res.json()
 }

@@ -14,10 +14,14 @@ export default defineConfig({
       '**/dist/**',
     ],
     reporters: [
-      'default',           // mantiene la salida en terminal
-      ['allure-vitest/reporter', {  // agrega el reporter de Allure
-        resultsDir: 'allure-results',
-      }],
+      'default', // mantiene la salida en terminal
+      [
+        'allure-vitest/reporter',
+        {
+          // agrega el reporter de Allure
+          resultsDir: 'allure-results',
+        },
+      ],
     ],
     setupFiles: ['allure-vitest/setup'],
   },

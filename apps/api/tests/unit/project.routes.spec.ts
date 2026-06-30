@@ -20,7 +20,8 @@ const { commentServiceInstance, projectServiceInstance, taskServiceInstance } =
   }))
 
 vi.mock('../../src/services/project.service', async (importOriginal) => {
-  const actual = await importOriginal<typeof import('../../src/services/project.service')>()
+  const actual =
+    await importOriginal<typeof import('../../src/services/project.service')>()
   return {
     ...actual,
     ProjectService: vi.fn().mockImplementation(() => projectServiceInstance),
@@ -28,7 +29,8 @@ vi.mock('../../src/services/project.service', async (importOriginal) => {
 })
 
 vi.mock('../../src/services/task.service', async (importOriginal) => {
-  const actual = await importOriginal<typeof import('../../src/services/task.service')>()
+  const actual =
+    await importOriginal<typeof import('../../src/services/task.service')>()
   return {
     ...actual,
     TaskService: vi.fn().mockImplementation(() => taskServiceInstance),
@@ -36,7 +38,8 @@ vi.mock('../../src/services/task.service', async (importOriginal) => {
 })
 
 vi.mock('../../src/services/comment.service', async (importOriginal) => {
-  const actual = await importOriginal<typeof import('../../src/services/comment.service')>()
+  const actual =
+    await importOriginal<typeof import('../../src/services/comment.service')>()
   return {
     ...actual,
     CommentService: vi.fn().mockImplementation(() => commentServiceInstance),
@@ -44,7 +47,8 @@ vi.mock('../../src/services/comment.service', async (importOriginal) => {
 })
 
 vi.mock('../../src/services/auth.service', async (importOriginal) => {
-  const actual = await importOriginal<typeof import('../../src/services/auth.service')>()
+  const actual =
+    await importOriginal<typeof import('../../src/services/auth.service')>()
   return {
     ...actual,
     AuthService: vi.fn().mockImplementation(() => ({
@@ -65,7 +69,9 @@ const now = new Date('2026-06-23T00:00:00.000Z')
 type ListProjectsResult = Awaited<ReturnType<ProjectService['listProjects']>>
 type GetProjectResult = Awaited<ReturnType<ProjectService['getProject']>>
 type CreateProjectResult = Awaited<ReturnType<ProjectService['createProject']>>
-type ArchiveProjectResult = Awaited<ReturnType<ProjectService['archiveProject']>>
+type ArchiveProjectResult = Awaited<
+  ReturnType<ProjectService['archiveProject']>
+>
 type GetTasksResult = Awaited<ReturnType<TaskService['getTasks']>>
 type GetCommentsResult = Awaited<ReturnType<CommentService['getComments']>>
 type AddCommentResult = Awaited<ReturnType<CommentService['addComment']>>
@@ -250,12 +256,16 @@ describe('project routes', () => {
       .set(authHeader)
 
     expect(res.status).toBe(200)
-    expect(taskServiceMock.getTasks).toHaveBeenCalledWith('project-1', 'user-1', {
-      status: 'TODO',
-      priority: 'HIGH',
-      assignedTo: 'user-2',
-      search: 'login',
-    })
+    expect(taskServiceMock.getTasks).toHaveBeenCalledWith(
+      'project-1',
+      'user-1',
+      {
+        status: 'TODO',
+        priority: 'HIGH',
+        assignedTo: 'user-2',
+        search: 'login',
+      }
+    )
   })
 
   it('returns project task comments', async () => {

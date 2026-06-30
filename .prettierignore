@@ -1,0 +1,12 @@
+node_modules
+dist
+coverage
+allure-results
+playwright-report
+.agents
+.git
+*.log
+*.err.log
+docs/**/*.docx
+package-lock.json
+mobile/package-lock.json

@@ -1,7 +1,11 @@
 import { PrismaClient } from '@prisma/client'
 import { Status, Priority } from '../prisma/enums'
 import { z } from 'zod'
-import { ForbiddenError, NotFoundError, UnprocessableError } from './auth.service'
+import {
+  ForbiddenError,
+  NotFoundError,
+  UnprocessableError,
+} from './auth.service'
 
 export const MAX_CHAR_TASK_NAME = 100
 export const MIN_CHAR_TASK_NAME = 3
@@ -62,7 +66,9 @@ export class TaskService {
     })
     if (!task) throw new NotFoundError('Task not found')
 
-    const isMember = task.project.members.some((m: { userId: string }) => m.userId === userId)
+    const isMember = task.project.members.some(
+      (m: { userId: string }) => m.userId === userId
+    )
     if (!isMember) throw new ForbiddenError('Not a project member')
 
     // Validate state transition
@@ -141,13 +147,17 @@ export class TaskService {
 
   validateTitle(title: string) {
     if (!title || title.trim() === '') {
-      throw new Error('El título es requerido');
+      throw new Error('El título es requerido')
     }
     if (title.length < MIN_CHAR_TASK_NAME) {
-      throw new Error(`El título debe tener al menos ${MIN_CHAR_TASK_NAME} caracteres`);
+      throw new Error(
+        `El título debe tener al menos ${MIN_CHAR_TASK_NAME} caracteres`
+      )
     }
     if (title.length > MAX_CHAR_TASK_NAME) {
-      throw new Error(`El título no debe tener más de ${MAX_CHAR_TASK_NAME} caracteres`);
+      throw new Error(
+        `El título no debe tener más de ${MAX_CHAR_TASK_NAME} caracteres`
+      )
     }
   }
 

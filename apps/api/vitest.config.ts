@@ -13,12 +13,7 @@ export default defineConfig({
         branches: 75,
         statements: 80,
       },
-      exclude: [
-        'src/index.ts',
-        'src/prisma/**',
-        'dist/**',
-        '**/*.d.ts',
-      ],
+      exclude: ['src/index.ts', 'src/prisma/**', 'dist/**', '**/*.d.ts'],
     },
     setupFiles: ['./tests/setup.ts'],
   },

@@ -2,7 +2,7 @@
 import { Page, test, expect } from '@playwright/test'
 
 export class ProjectListPage {
-  constructor(private page: Page) { }
+  constructor(private page: Page) {}
   async goto() {
     await this.page.goto('/projects')
   }
@@ -15,19 +15,15 @@ export class ProjectListPage {
     await expect(this.page.getByTestId('project-name-input')).toBeVisible()
   }
   async expectProjectVisible(name: string) {
-    await expect(this.page.getByText(name)
-    ).toBeVisible()
+    await expect(this.page.getByText(name)).toBeVisible()
   }
   async expectProjectCount(count: number) {
-    await expect(
-      this.page.getByTestId('project-card')
-    ).toHaveCount(count)
+    await expect(this.page.getByTestId('project-card')).toHaveCount(count)
   }
 }
 
 // ── US-01 / US-02: Auth flow E2E ──────────────────────────────
 test.describe('Flujo de autenticación', () => {
-
   test('usuario puede registrarse e iniciar sesión', async ({ page }) => {
     const email = `e2e-${Date.now()}@test.com`
 
@@ -57,7 +53,9 @@ test.describe('Flujo de autenticación', () => {
     await expect(page).toHaveURL('/register') // no redirige
   })
 
-  test('usuario puede hacer login con credenciales válidas', async ({ page }) => {
+  test('usuario puede hacer login con credenciales válidas', async ({
+    page,
+  }) => {
     await page.goto('/login')
 
     await page.getByLabel('Email').fill('seed@test.com') // usuario del seed
@@ -81,7 +79,6 @@ test.describe('Flujo de autenticación', () => {
 
 // ── US-05 / US-06: Task flow E2E ─────────────────────────────
 test.describe('Flujo de tareas', () => {
-
   test.beforeEach(async ({ page }) => {
     // Login antes de cada test
     await page.goto('/login')
@@ -123,6 +120,8 @@ test.describe('Flujo de tareas', () => {
     await task.click()
 
     // El botón "Completar" no debe existir si la tarea está en TODO
-    await expect(page.getByRole('button', { name: 'Completar' })).not.toBeVisible()
+    await expect(
+      page.getByRole('button', { name: 'Completar' })
+    ).not.toBeVisible()
   })
 })

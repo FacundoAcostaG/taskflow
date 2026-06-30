@@ -14,13 +14,8 @@
     "esModuleInterop": true,
     "baseUrl": ".",
     "paths": {
-      "*": [
-        "node_modules/*"
-      ]
+      "*": ["node_modules/*"]
     }
   },
-  "include": [
-    "tests/**/*.ts",
-    "wdio.conf.ts"
-  ]
+  "include": ["tests/**/*.ts", "wdio.conf.ts"]
 }

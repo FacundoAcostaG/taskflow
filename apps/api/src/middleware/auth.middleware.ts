@@ -13,10 +13,16 @@ export interface AuthRequest extends Request {
   userId?: string
 }
 
-export function requireAuth(req: AuthRequest, res: Response, next: NextFunction) {
+export function requireAuth(
+  req: AuthRequest,
+  res: Response,
+  next: NextFunction
+) {
   const authHeader = req.headers.authorization
   if (!authHeader?.startsWith('Bearer ')) {
-    return res.status(401).json({ error: 'Missing or invalid authorization header' })
+    return res
+      .status(401)
+      .json({ error: 'Missing or invalid authorization header' })
   }
 
   const token = authHeader.slice(7)
@@ -29,7 +35,12 @@ export function requireAuth(req: AuthRequest, res: Response, next: NextFunction)
   }
 }
 
-export function errorHandler(err: Error, _req: Request, res: Response, _next: NextFunction) {
+export function errorHandler(
+  err: Error,
+  _req: Request,
+  res: Response,
+  _next: NextFunction
+) {
   const status = (err as HttpError).statusCode ?? 500
   const message = status === 500 ? 'Internal server error' : err.message
 
@@ -37,7 +48,9 @@ export function errorHandler(err: Error, _req: Request, res: Response, _next: Ne
 
   // Handle Zod validation errors
   if (err.name === 'ZodError') {
-    return res.status(400).json({ error: 'Validation error', details: JSON.parse(err.message) })
+    return res
+      .status(400)
+      .json({ error: 'Validation error', details: JSON.parse(err.message) })
   }
 
   return res.status(status).json({ error: message })

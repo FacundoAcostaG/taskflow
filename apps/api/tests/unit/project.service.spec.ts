@@ -108,9 +108,9 @@ describe('ProjectService', () => {
   it('throws when archiving a missing project', async () => {
     mockDb.project.findUnique.mockResolvedValue(null)
 
-    await expect(
-      service.archiveProject('project-1', 'user-1')
-    ).rejects.toThrow(NotFoundError)
+    await expect(service.archiveProject('project-1', 'user-1')).rejects.toThrow(
+      NotFoundError
+    )
   })
 
   it('throws when a non-owner tries to archive a project', async () => {
@@ -119,9 +119,9 @@ describe('ProjectService', () => {
       ownerId: 'other-user',
     })
 
-    await expect(
-      service.archiveProject('project-1', 'user-1')
-    ).rejects.toThrow(ForbiddenError)
+    await expect(service.archiveProject('project-1', 'user-1')).rejects.toThrow(
+      ForbiddenError
+    )
   })
 
   it('archives a project for its owner', async () => {

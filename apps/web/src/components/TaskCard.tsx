@@ -31,7 +31,9 @@ export default function TaskCard({ task, projectId }: Props) {
           {task.title}
         </span>
         {/* TODO (estudiante): usar getPriorityBadgeClass(task.priority) para colorear el badge */}
-        <span className={`text-xs px-2 py-0.5 rounded-full font-medium ${getPriorityBadgeClass(task.priority)}`}>
+        <span
+          className={`text-xs px-2 py-0.5 rounded-full font-medium ${getPriorityBadgeClass(task.priority)}`}
+        >
           {task.priority}
         </span>
       </div>
