@@ -6,6 +6,7 @@ playwright-report
 .agents
 .git
 taskflow-bdd/cucumber-report.html
+taskflow-bdd/features/**/*.feature
 *.log
 *.err.log
 docs/**/*.docx
