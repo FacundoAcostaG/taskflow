@@ -99,7 +99,9 @@ test.describe('Flujo de autenticación', () => {
     await expect(page).toHaveURL(`${baseURL}/register`)
   })
 
-  test('usuario puede hacer login con credenciales válidas', async ({ page }) => {
+  test('usuario puede hacer login con credenciales válidas', async ({
+    page,
+  }) => {
     await loginAsSharedUser(page)
   })
 
@@ -127,7 +129,9 @@ test.describe('Flujo de tareas', () => {
 
     await createTask(page, taskTitle)
 
-    const taskCard = page.getByTestId('task-card').filter({ hasText: taskTitle })
+    const taskCard = page
+      .getByTestId('task-card')
+      .filter({ hasText: taskTitle })
     await expect(taskCard).toBeVisible()
     await expect(taskCard).toContainText('TODO')
   })
@@ -137,7 +141,9 @@ test.describe('Flujo de tareas', () => {
 
     await createTask(page, taskTitle)
 
-    const taskCard = page.getByTestId('task-card').filter({ hasText: taskTitle })
+    const taskCard = page
+      .getByTestId('task-card')
+      .filter({ hasText: taskTitle })
     await taskCard.click()
 
     await page.getByRole('button', { name: /IN_PROGRESS/ }).click()
@@ -151,7 +157,9 @@ test.describe('Flujo de tareas', () => {
 
     await createTask(page, taskTitle)
 
-    const taskCard = page.getByTestId('task-card').filter({ hasText: taskTitle })
+    const taskCard = page
+      .getByTestId('task-card')
+      .filter({ hasText: taskTitle })
     await taskCard.click()
 
     await expect(page.getByRole('button', { name: /DONE/ })).not.toBeVisible()
