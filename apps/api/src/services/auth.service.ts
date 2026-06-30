@@ -51,6 +51,7 @@ export class AuthService {
     })
 
     const token = this.generateToken(user.id)
+    console.log(`  ***********************→ Usuario ${user.email} registrado con token: ${token}`);
     return { user, token }
   }
 

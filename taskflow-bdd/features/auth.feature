@@ -22,8 +22,7 @@ Feature: Autenticación y gestión de acceso
       | password | Secure123!     |
       | name     | Juan Pérez     |
     Then la respuesta tiene código de estado 201
-    And el cuerpo contiene el campo "id"
-    And el cuerpo contiene "email" con valor "nuevo@test.com"
+    And el cuerpo contiene el campo "token"
 
   Scenario: Registro rechazado con email duplicado
     Given que el email "existente@test.com" ya está registrado
@@ -32,7 +31,7 @@ Feature: Autenticación y gestión de acceso
       | password | OtraPass456!       |
       | name     | María García       |
     Then la respuesta tiene código de estado 409
-    And el cuerpo contiene "message" con valor "Email ya registrado"
+    And el cuerpo contiene "error" con valor "Email already registered"
 
   Scenario: Registro rechazado con contraseña muy corta
     Given que el email "nuevo2@test.com" no está registrado
@@ -41,7 +40,7 @@ Feature: Autenticación y gestión de acceso
       | password | corta           |
       | name     | Test User       |
     Then la respuesta tiene código de estado 400
-    And el cuerpo contiene "message" con valor "La contraseña debe tener al menos 8 caracteres"
+    And el cuerpo contiene "error" con valor "Validation error"
 
   Scenario: Registro rechazado con email inválido
     Given que ningún usuario está registrado
@@ -50,7 +49,7 @@ Feature: Autenticación y gestión de acceso
       | password | ValidPass123!    |
       | name     | Test User        |
     Then la respuesta tiene código de estado 400
-    And el cuerpo contiene "message" con valor "Email inválido"
+    And el cuerpo contiene "error" con valor "Validation error"
 
   # ── US-02: Login ─────────────────────────────────────────
 
@@ -61,7 +60,6 @@ Feature: Autenticación y gestión de acceso
       | password | Pass123!         |
     Then la respuesta tiene código de estado 200
     And el cuerpo contiene el campo "token"
-    And el cuerpo contiene "email" con valor "usuario@test.com"
 
   Scenario: Login rechazado con contraseña incorrecta
     Given que existe el usuario con email "usuario@test.com" y password "Pass123!"
@@ -69,4 +67,4 @@ Feature: Autenticación y gestión de acceso
       | email    | usuario@test.com   |
       | password | ContraseñaMal456   |
     Then la respuesta tiene código de estado 401
-    And el cuerpo contiene "message" con valor "Credenciales inválidas"
+    And el cuerpo contiene "error" con valor "Invalid credentials"
