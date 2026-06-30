@@ -16,19 +16,19 @@ Equipo: **Facundo Acosta** y **Pablo Constantino**
 
 ## Stack
 
-| Capa | Tecnologia |
-| --- | --- |
-| Backend | Node.js + Express + TypeScript |
-| Frontend | React 18 + TypeScript + Vite |
-| Persistencia | Prisma + PostgreSQL |
-| Unit testing | Vitest |
-| Integracion API | Vitest + Supertest |
-| BDD | Cucumber.js + Gherkin |
-| E2E web | Playwright |
-| Contract testing | Pact |
-| Mobile testing | WebdriverIO + Appium |
-| Performance | k6 |
-| CI/CD | GitHub Actions |
+| Capa             | Tecnologia                     |
+| ---------------- | ------------------------------ |
+| Backend          | Node.js + Express + TypeScript |
+| Frontend         | React 18 + TypeScript + Vite   |
+| Persistencia     | Prisma + PostgreSQL            |
+| Unit testing     | Vitest                         |
+| Integracion API  | Vitest + Supertest             |
+| BDD              | Cucumber.js + Gherkin          |
+| E2E web          | Playwright                     |
+| Contract testing | Pact                           |
+| Mobile testing   | WebdriverIO + Appium           |
+| Performance      | k6                             |
+| CI/CD            | GitHub Actions                 |
 
 ## Setup rapido
 
@@ -56,11 +56,11 @@ Esto deja lista la base, genera Prisma y levanta:
 
 ### Credenciales seed
 
-| Email | Contrasena |
-| --- | --- |
+| Email                | Contrasena  |
+| -------------------- | ----------- |
 | `alice@taskflow.dev` | `Password1` |
-| `bob@taskflow.dev` | `Password1` |
-| `seed@test.com` | `Password1` |
+| `bob@taskflow.dev`   | `Password1` |
+| `seed@test.com`      | `Password1` |
 
 ## Variables de entorno
 
@@ -141,12 +141,12 @@ taskflow/
 
 ## Rutas principales del frontend
 
-| Ruta | Pantalla |
-| --- | --- |
-| `/register` | Registro |
-| `/login` | Login |
-| `/projects` | Lista de proyectos |
-| `/projects/:id` | Detalle de proyecto y tareas |
+| Ruta                          | Pantalla                       |
+| ----------------------------- | ------------------------------ |
+| `/register`                   | Registro                       |
+| `/login`                      | Login                          |
+| `/projects`                   | Lista de proyectos             |
+| `/projects/:id`               | Detalle de proyecto y tareas   |
 | `/projects/:id/tasks/:taskId` | Detalle de tarea y comentarios |
 
 ## Endpoints base del backend
