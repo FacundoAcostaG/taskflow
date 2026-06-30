@@ -9,7 +9,8 @@ const { taskServiceInstance } = vi.hoisted(() => ({
 }))
 
 vi.mock('../../src/services/task.service', async (importOriginal) => {
-  const actual = await importOriginal<typeof import('../../src/services/task.service')>()
+  const actual =
+    await importOriginal<typeof import('../../src/services/task.service')>()
   return {
     ...actual,
     TaskService: vi.fn().mockImplementation(() => taskServiceInstance),
@@ -17,7 +18,8 @@ vi.mock('../../src/services/task.service', async (importOriginal) => {
 })
 
 vi.mock('../../src/services/auth.service', async (importOriginal) => {
-  const actual = await importOriginal<typeof import('../../src/services/auth.service')>()
+  const actual =
+    await importOriginal<typeof import('../../src/services/auth.service')>()
   return {
     ...actual,
     AuthService: vi.fn().mockImplementation(() => ({

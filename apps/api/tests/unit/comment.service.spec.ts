@@ -1,8 +1,5 @@
 import { beforeEach, describe, expect, it, vi } from 'vitest'
-import {
-  ForbiddenError,
-  NotFoundError,
-} from '../../src/services/auth.service'
+import { ForbiddenError, NotFoundError } from '../../src/services/auth.service'
 import { CommentService } from '../../src/services/comment.service'
 
 const mockDb = {

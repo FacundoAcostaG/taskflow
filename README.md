@@ -21,10 +21,10 @@ npm run dev         # levanta API + frontend
 
 Abrí **http://localhost:5173** e iniciá sesión con:
 
-| Email | Contraseña |
-|-------|-----------|
+| Email                | Contraseña  |
+| -------------------- | ----------- |
 | `alice@taskflow.dev` | `Password1` |
-| `bob@taskflow.dev` | `Password1` |
+| `bob@taskflow.dev`   | `Password1` |
 
 El script `setup.sh` es idempotente: podés correrlo todas las veces que quieras sin romper nada.
 
@@ -38,17 +38,20 @@ El script `setup.sh` es idempotente: podés correrlo todas las veces que quieras
 ### ¿No tenés PostgreSQL? Dos opciones:
 
 **Opción A — Homebrew (macOS)**
+
 ```bash
 brew install postgresql@16
 brew services start postgresql@16
 ```
 
 **Opción B — Docker**
+
 ```bash
 docker run --name taskflow-db -e POSTGRES_PASSWORD=postgres -p 5432:5432 -d postgres:16
 ```
 
 Si usás Docker, antes de correr `setup.sh` editá `apps/api/.env` con:
+
 ```
 DATABASE_URL="postgresql://postgres:postgres@localhost:5432/postgres"
 ```
@@ -72,16 +75,16 @@ k6 run performance/scenarios/api-load.k6.js
 
 ## Stack
 
-| Capa | Tecnología |
-|------|-----------|
-| Backend | Node.js + Express + TypeScript |
-| Frontend | React 18 + TypeScript + Vite |
-| ORM | Prisma + PostgreSQL |
-| Unit/Integration | Vitest + Supertest |
-| BDD | Cucumber.js + Gherkin |
-| E2E | Playwright |
-| Performance | k6 |
-| CI/CD | GitHub Actions |
+| Capa             | Tecnología                     |
+| ---------------- | ------------------------------ |
+| Backend          | Node.js + Express + TypeScript |
+| Frontend         | React 18 + TypeScript + Vite   |
+| ORM              | Prisma + PostgreSQL            |
+| Unit/Integration | Vitest + Supertest             |
+| BDD              | Cucumber.js + Gherkin          |
+| E2E              | Playwright                     |
+| Performance      | k6                             |
+| CI/CD            | GitHub Actions                 |
 
 ---
 
@@ -122,12 +125,12 @@ taskflow/
 
 ## Frontend (`apps/web`)
 
-| Ruta | Pantalla |
-|------|---------|
-| `/register` | Registro de usuario |
-| `/login` | Login |
-| `/projects` | Lista de proyectos |
-| `/projects/:id` | Detalle de proyecto + tareas |
+| Ruta                          | Pantalla                       |
+| ----------------------------- | ------------------------------ |
+| `/register`                   | Registro de usuario            |
+| `/login`                      | Login                          |
+| `/projects`                   | Lista de proyectos             |
+| `/projects/:id`               | Detalle de proyecto + tareas   |
 | `/projects/:id/tasks/:taskId` | Detalle de tarea + comentarios |
 
 ```bash
@@ -148,22 +151,23 @@ Buscá los comentarios `// TODO (estudiante):` en esos archivos.
 
 ## Hitos del semestre
 
-| Clase | Entregable |
-|-------|-----------|
-| 3 | Repo + pipeline lint verde |
-| 5 | US-01 y US-02 con unit + integration tests |
-| 7 | US-03–05 + escenarios BDD pasando |
-| 9 | US-06–08 + coverage ≥ 80% |
-| 11 | E2E flujos críticos + contract tests |
-| 13 | Scripts k6 + reporte SLOs |
-| 15 | Suite completa + ADR + trazabilidad |
-| 16 | Demo day 🎉 |
+| Clase | Entregable                                 |
+| ----- | ------------------------------------------ |
+| 3     | Repo + pipeline lint verde                 |
+| 5     | US-01 y US-02 con unit + integration tests |
+| 7     | US-03–05 + escenarios BDD pasando          |
+| 9     | US-06–08 + coverage ≥ 80%                  |
+| 11    | E2E flujos críticos + contract tests       |
+| 13    | Scripts k6 + reporte SLOs                  |
+| 15    | Suite completa + ADR + trazabilidad        |
+| 16    | Demo day 🎉                                |
 
 ---
 
 ## Definition of Done
 
 Una US está DONE cuando:
+
 - [ ] Código compila sin errores TS
 - [ ] Unit tests pasan con coverage ≥ 80%
 - [ ] Integration tests cubren happy path + 2 casos de error

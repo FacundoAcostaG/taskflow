@@ -18,7 +18,9 @@ export class CommentService {
     })
     if (!task) throw new NotFoundError('Task not found')
 
-    const isMember = task.project.members.some((m: { userId: string }) => m.userId === userId)
+    const isMember = task.project.members.some(
+      (m: { userId: string }) => m.userId === userId
+    )
     if (!isMember) throw new ForbiddenError('Not a project member')
 
     return this.db.comment.create({
@@ -34,7 +36,9 @@ export class CommentService {
     })
     if (!task) throw new NotFoundError('Task not found')
 
-    const isMember = task.project.members.some((m: { userId: string }) => m.userId === userId)
+    const isMember = task.project.members.some(
+      (m: { userId: string }) => m.userId === userId
+    )
     if (!isMember) throw new ForbiddenError('Not a project member')
 
     // BUG-04: should be orderBy: { createdAt: 'asc' }
@@ -50,7 +54,8 @@ export class CommentService {
       where: { id: commentId },
     })
     if (!comment) throw new NotFoundError('Comment not found')
-    if (comment.authorId !== userId) throw new ForbiddenError('Can only delete your own comments')
+    if (comment.authorId !== userId)
+      throw new ForbiddenError('Can only delete your own comments')
 
     await this.db.comment.delete({ where: { id: commentId } })
   }

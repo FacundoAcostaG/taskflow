@@ -60,13 +60,17 @@ export class ProjectService {
       where: { id: projectId },
       include: {
         owner: { select: { id: true, email: true, name: true } },
-        members: { include: { user: { select: { id: true, email: true, name: true } } } },
+        members: {
+          include: { user: { select: { id: true, email: true, name: true } } },
+        },
         _count: { select: { tasks: true } },
       },
     })
     if (!project) throw new NotFoundError('Project not found')
 
-    const isMember = project.members.some((m: { userId: string }) => m.userId === userId)
+    const isMember = project.members.some(
+      (m: { userId: string }) => m.userId === userId
+    )
     if (!isMember) throw new ForbiddenError('Not a project member')
 
     return project
@@ -77,7 +81,8 @@ export class ProjectService {
       where: { id: projectId },
     })
     if (!project) throw new NotFoundError('Project not found')
-    if (project.ownerId !== userId) throw new ForbiddenError('Only the owner can archive a project')
+    if (project.ownerId !== userId)
+      throw new ForbiddenError('Only the owner can archive a project')
 
     return this.db.project.update({
       where: { id: projectId },

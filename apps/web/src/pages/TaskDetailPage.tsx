@@ -12,7 +12,10 @@ const NEXT_STATUS: Record<TaskStatus, TaskStatus[]> = {
 }
 
 export default function TaskDetailPage() {
-  const { projectId, taskId } = useParams<{ projectId: string; taskId: string }>()
+  const { projectId, taskId } = useParams<{
+    projectId: string
+    taskId: string
+  }>()
   const [task, setTask] = useState<Task | null>(null)
   const [comments, setComments] = useState<Comment[]>([])
   const [commentBody, setCommentBody] = useState('')
@@ -51,12 +54,16 @@ export default function TaskDetailPage() {
     if (!projectId || !taskId || !commentBody.trim()) return
     setCommentError('')
     try {
-      const comment = await commentsApi.create(projectId, taskId, { body: commentBody })
+      const comment = await commentsApi.create(projectId, taskId, {
+        body: commentBody,
+      })
       setComments((prev) => [...prev, comment])
       setCommentBody('')
     } catch (err) {
       if (axios.isAxiosError(err)) {
-        setCommentError(err.response?.data?.message ?? 'Error al agregar comentario')
+        setCommentError(
+          err.response?.data?.message ?? 'Error al agregar comentario'
+        )
       } else {
         setCommentError('Error al agregar comentario')
       }
@@ -70,10 +77,15 @@ export default function TaskDetailPage() {
   return (
     <main className="max-w-2xl mx-auto px-4 py-8 space-y-8">
       <section>
-        <h1 data-testid="task-title" className="text-2xl font-bold text-gray-900">
+        <h1
+          data-testid="task-title"
+          className="text-2xl font-bold text-gray-900"
+        >
           {task.title}
         </h1>
-        {task.description && <p className="text-gray-600 mt-2 text-sm">{task.description}</p>}
+        {task.description && (
+          <p className="text-gray-600 mt-2 text-sm">{task.description}</p>
+        )}
         <div className="flex gap-3 mt-3 items-center">
           <span className="text-xs font-medium text-teal-700 bg-teal-50 px-2 py-0.5 rounded-full">
             {task.status}
@@ -102,7 +114,9 @@ export default function TaskDetailPage() {
             ))
           )}
         </div>
-        {statusError && <p className="text-sm text-red-600 mt-2">{statusError}</p>}
+        {statusError && (
+          <p className="text-sm text-red-600 mt-2">{statusError}</p>
+        )}
       </section>
 
       <section>
@@ -117,7 +131,9 @@ export default function TaskDetailPage() {
             rows={3}
             className="w-full border border-gray-300 rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-teal-500"
           />
-          {commentError && <p className="text-sm text-red-600">{commentError}</p>}
+          {commentError && (
+            <p className="text-sm text-red-600">{commentError}</p>
+          )}
           <button
             data-testid="comment-submit"
             type="submit"

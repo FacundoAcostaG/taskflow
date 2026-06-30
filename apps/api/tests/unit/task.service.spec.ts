@@ -1,9 +1,6 @@
 import { beforeEach, describe, expect, it, vi } from 'vitest'
 import { Priority, Status } from '../../src/prisma/enums'
-import {
-  ForbiddenError,
-  NotFoundError,
-} from '../../src/services/auth.service'
+import { ForbiddenError, NotFoundError } from '../../src/services/auth.service'
 import { TaskService } from '../../src/services/task.service'
 
 const mockDb = {

@@ -22,21 +22,36 @@ export const projectsApi = {
   list: () => api.get<Project[]>('/api/projects').then((r) => r.data),
   create: (data: { name: string; description?: string }) =>
     api.post<Project>('/api/projects', data).then((r) => r.data),
-  get: (id: string) => api.get<Project>(`/api/projects/${id}`).then((r) => r.data),
+  get: (id: string) =>
+    api.get<Project>(`/api/projects/${id}`).then((r) => r.data),
 }
 
 export const tasksApi = {
   list: (projectId: string, params?: { status?: string; search?: string }) =>
-    api.get<Task[]>(`/api/projects/${projectId}/tasks`, { params }).then((r) => r.data),
-  create: (projectId: string, data: { title: string; description?: string; priority: string }) =>
-    api.post<Task>(`/api/projects/${projectId}/tasks`, data).then((r) => r.data),
+    api
+      .get<Task[]>(`/api/projects/${projectId}/tasks`, { params })
+      .then((r) => r.data),
+  create: (
+    projectId: string,
+    data: { title: string; description?: string; priority: string }
+  ) =>
+    api
+      .post<Task>(`/api/projects/${projectId}/tasks`, data)
+      .then((r) => r.data),
   update: (taskId: string, data: { status?: string; assignedTo?: string }) =>
     api.patch<Task>(`/api/tasks/${taskId}`, data).then((r) => r.data),
 }
 
 export const commentsApi = {
   list: (projectId: string, taskId: string) =>
-    api.get<Comment[]>(`/api/projects/${projectId}/tasks/${taskId}/comments`).then((r) => r.data),
+    api
+      .get<Comment[]>(`/api/projects/${projectId}/tasks/${taskId}/comments`)
+      .then((r) => r.data),
   create: (projectId: string, taskId: string, data: { body: string }) =>
-    api.post<Comment>(`/api/projects/${projectId}/tasks/${taskId}/comments`, data).then((r) => r.data),
+    api
+      .post<Comment>(
+        `/api/projects/${projectId}/tasks/${taskId}/comments`,
+        data
+      )
+      .then((r) => r.data),
 }
