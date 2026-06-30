@@ -36,17 +36,17 @@ export const options = {
     },
 
     // Pico: spike de 200 usuarios
-    /*     spike: {
+    spike: {
       executor: 'ramping-vus',
       startVUs: 0,
       stages: [
         { duration: '10s', target: 200 }, // spike súbito
         { duration: '30s', target: 200 }, // mantener
-        { duration: '10s', target: 0 },   // bajar
+        { duration: '10s', target: 0 }, // bajar
       ],
       startTime: '3m', // empieza después del load test
       tags: { scenario: 'spike' },
-    }, */
+    },
   },
 }
 
