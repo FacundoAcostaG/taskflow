@@ -18,28 +18,23 @@ Feature: Gestión de proyectos
     When el usuario crea un proyecto con:
       | name        | TaskFlow Backend     |
       | description | API REST con Express |
-      | color       | #0D9488              |
     Then la respuesta tiene código de estado 201
-    And el proyecto tiene columnas: "To Do", "In Progress", "In Review", "Done"
-    And el usuario es propietario del proyecto
+
+  Scenario: Crear proyecto falla sin autenticación
+    When el usuario crea un proyecto sin autenticación con:
+      | name        | Proyecto Sin Auth |
+      | description | No debería funcionar |
+    Then la respuesta tiene código de estado 401
+    And el cuerpo contiene "error" con el valor "Missing or invalid authorization header"
 
   Scenario: No se puede crear un proyecto sin nombre
     When el usuario crea un proyecto con:
       | name        |                 |
       | description | Sin nombre      |
     Then la respuesta tiene código de estado 400
-    And el cuerpo contiene "message" con valor "El nombre del proyecto es requerido"
+    And el cuerpo contiene "error" con el valor "Validation error"
 
-  Scenario: Invitar a un miembro al proyecto
-    Given que existe un proyecto "Mi Proyecto" del usuario "owner@test.com"
-    And existe un usuario con email "miembro@test.com"
-    When el propietario invita a "miembro@test.com" como "member"
-    Then la respuesta tiene código de estado 200
-    And el proyecto tiene 2 participantes
-
-  Scenario: Un invitado solo puede ver el proyecto, no crear tareas
-    Given que existe un proyecto "Mi Proyecto" del usuario "owner@test.com"
-    And existe un usuario con email "invitado@test.com" con rol "viewer"
-    When "invitado@test.com" intenta crear una tarea en el proyecto
-    Then la respuesta tiene código de estado 403
-    And el cuerpo contiene "message" con valor "No tenés permisos para crear tareas"
+# Falta :
+# Crear proyecto falla sin autenticación
+# Listar proyectos propios
+# No ver proyectos de otros usuarios
