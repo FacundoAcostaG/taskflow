@@ -171,3 +171,66 @@ jobs:
           name: playwright-report-${{ github.run_id }}
           path: playwright-report/
           retention-days: 7
+
+  # —— 6. Performance Tests (solo en PR a main, después de E2E) ———————————
+  performance-tests:
+    name: 📈 Performance Tests (k6)
+    runs-on: ubuntu-latest
+    needs: e2e-tests
+    if: github.event_name == 'pull_request'
+    services:
+      postgres:
+        image: postgres:16-alpine
+        env:
+          POSTGRES_USER: taskflow
+          POSTGRES_PASSWORD: testpassword
+          POSTGRES_DB: taskflow_perf
+        ports:
+          - 5432:5432
+        options: >-
+          --health-cmd pg_isready
+          --health-interval 10s
+          --health-timeout 5s
+          --health-retries 5
+    env:
+      DATABASE_URL: postgresql://taskflow:testpassword@localhost:5432/taskflow_perf
+      JWT_SECRET: test-secret-for-ci
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: ${{ env.NODE_VERSION }}
+      - run: npm ci
+      - name: Install Rollup native binary for Linux
+        run: npm install --no-save @rollup/rollup-linux-x64-gnu@4.59.0
+      - uses: grafana/setup-k6-action@v1
+      - name: Run Prisma migrations
+        run: npx prisma migrate deploy
+        working-directory: apps/api
+      - name: Build API
+        run: npm run build
+        working-directory: apps/api
+      - name: Start API
+        run: npm run start --workspace=apps/api > api.log 2>&1 &
+      - name: Wait for API healthcheck
+        run: |
+          for i in {1..30}; do
+            if curl -fsS http://127.0.0.1:3001/health > /dev/null; then
+              exit 0
+            fi
+            sleep 2
+          done
+          echo "API did not become healthy in time"
+          cat api.log || true
+          exit 1
+      - name: Run performance tests
+        run: k6 run performance/scenarios/api-load.k6.js
+        env:
+          BASE_URL: http://127.0.0.1:3001
+      - name: Upload API log
+        uses: actions/upload-artifact@v4
+        if: failure()
+        with:
+          name: performance-api-log-${{ github.run_id }}
+          path: api.log
+          retention-days: 7
