@@ -2,7 +2,7 @@ import { test, expect, type Page } from '@playwright/test'
 
 const baseURL = process.env.BASE_URL || 'http://localhost:5173'
 const apiURL = process.env.API_URL || 'http://localhost:3001'
-const RUN_ID = `e2e-${Date.now()}`
+const RUN_ID = `e2e-${Date.now()}-${Math.random().toString(36).slice(2, 8)}`
 
 const SHARED_USER = {
   email: 'seed@test.com',

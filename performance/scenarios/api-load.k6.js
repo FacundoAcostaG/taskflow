@@ -36,7 +36,7 @@ export const options = {
     },
 
     // Pico: spike de 200 usuarios
-    /*     spike: {
+         spike: {
       executor: 'ramping-vus',
       startVUs: 0,
       stages: [
@@ -46,7 +46,7 @@ export const options = {
       ],
       startTime: '3m', // empieza después del load test
       tags: { scenario: 'spike' },
-    }, */
+    }, 
   },
 }
 

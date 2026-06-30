@@ -1,10 +1,15 @@
 import { test, expect } from '@playwright/test'
 import { LoginPage } from '../pages/LoginPage'
 import { ProjectListPage } from '../pages/ProjectListPage'
+
+function uniqueSuffix() {
+  return `${Date.now()}-${Math.random().toString(36).slice(2, 8)}`
+}
+
 test.describe('US-03: Crear proyecto', () => {
   test.beforeEach(async ({ page }) => {
     const loginPage = new LoginPage(page)
-    const email = `user_${Date.now()}@test.com`
+    const email = `user_${uniqueSuffix()}@test.com`
     const password = 'Password123'
     await loginPage.register(email, password, 'Test User')
     await page.waitForTimeout(5000)

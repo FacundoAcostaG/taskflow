@@ -1,4 +1,4 @@
-import { Page, expect } from 'playwright/test'
+import { Page, expect } from '@playwright/test'
 export class ProjectListPage {
   constructor(private page: Page) {}
   async goto() {
